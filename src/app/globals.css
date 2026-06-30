@@ -49,10 +49,7 @@
   * {
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.05) transparent;
-    cursor: none;
   }
-  *:hover { cursor: none; }
-  a, button, input, select, textarea, [role="button"] { cursor: none; }
 
   body {
     background: var(--bg-deep);
@@ -60,7 +57,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    cursor: none;
   }
+  input, textarea, select, [contenteditable] { cursor: text; }
+  a, button, [role="button"], label, summary { cursor: pointer; }
 
   ::selection {
     background: rgba(16, 185, 129, 0.12);
