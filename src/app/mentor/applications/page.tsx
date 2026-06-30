@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { IconXCircle } from "@/components/shared/Icons";
 
 export default function ApplicationsPage() {
@@ -76,23 +76,19 @@ export default function ApplicationsPage() {
                 <span className="badge badge-yellow">Pending</span>
               </div>
               <div className="flex gap-3 mt-4">
-                <motion.button
+                <button
                   onClick={() => handleAction(app.id, "ACCEPTED")}
                   className="btn-primary px-4 py-2 text-sm"
                   style={{ background: 'var(--accent-green)' }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                 >
                   Accept
-                </motion.button>
-                <motion.button
+                </button>
+                <button
                   onClick={() => handleAction(app.id, "REJECTED")}
                   className="btn-danger px-4 py-2 text-sm"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                 >
                   Reject
-                </motion.button>
+                </button>
               </div>
             </motion.div>
           ))}
@@ -131,43 +127,24 @@ export default function ApplicationsPage() {
         </div>
       )}
 
-      <AnimatePresence>
-        {selectedDiag && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="modal-overlay" onClick={() => setSelectedDiag(null)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ type: "spring", stiffness: 80, damping: 14 }}
-              className="modal-content" onClick={(e) => e.stopPropagation()}
-            >
-              <div className="modal-header">
-                <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Diagnostic Answers</h3>
-                <button onClick={() => setSelectedDiag(null)} style={{ color: 'var(--text-secondary)' }}><IconXCircle className="w-5 h-5" /></button>
-              </div>
-              <div className="space-y-3">
-                {Object.entries(selectedDiag).map(([key, val]) => (
-                  <motion.div
-                    key={key}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ type: "spring", stiffness: 100, damping: 14 }}
-                  >
-                    <p className="text-xs uppercase tracking-wide" style={{ color: 'var(--accent-emerald)' }}>{key.replace(/([A-Z])/g, " $1")}</p>
-                    <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{String(val) || "Not answered"}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {selectedDiag && (
+        <div className="modal-overlay" onClick={() => setSelectedDiag(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Diagnostic Answers</h3>
+              <button onClick={() => setSelectedDiag(null)} style={{ color: 'var(--text-secondary)' }}><IconXCircle className="w-5 h-5" /></button>
+            </div>
+            <div className="space-y-3">
+              {Object.entries(selectedDiag).map(([key, val]) => (
+                <div key={key}>
+                  <p className="text-xs uppercase tracking-wide" style={{ color: 'var(--accent-emerald)' }}>{key.replace(/([A-Z])/g, " $1")}</p>
+                  <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{String(val) || "Not answered"}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

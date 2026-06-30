@@ -1,48 +1,39 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
-import { motion, useScroll, useTransform, useSpring, useMotionValueEvent, AnimatePresence, type MotionValue } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { ShieldIcon, ChartIcon, GraphIcon } from "@/components/shared/AnimatedIcons";
+import { ShieldIcon, ChartIcon, DollarIcon, CodeIcon } from "@/components/shared/AnimatedIcons";
 
 const titleWords = ["Cybersecurity", "Data Science", "Finance"];
 
 const subjects = [
   {
-    id: 0, title: "Cybersecurity", color: "var(--accent-emerald)", colorName: "emerald",
-    gradient: "linear-gradient(180deg, rgba(16,185,129,0.06), transparent 70%)",
-    borderColor: "rgba(16,185,129,0.15)", btnStyle: { background: "var(--accent-emerald)" },
-    iconLarge: <ShieldIcon size={160} color="var(--accent-emerald)" />,
-    cta: "/signup?role=student",
-    paragraphs: [
-      "Cybersecurity is the practice of protecting systems, networks, and programs from digital attacks. These cyberattacks are usually aimed at accessing, changing, or destroying sensitive information; extorting money from users; or interrupting normal business processes.",
-      "Our cybersecurity track covers network defense, ethical hacking, threat intelligence, and incident response. You will learn how to identify vulnerabilities, conduct penetration tests, and implement security measures that protect critical infrastructure.",
-      "Through hands-on labs with real-world attack simulations and capture-the-flag challenges, you will develop the practical skills needed to defend against evolving cyber threats. Topics include cryptography, reverse engineering, malware analysis, and security operations center (SOC) workflows.",
-    ],
+    title: "Cybersecurity",
+    desc: "Network defense, ethical hacking, threat intelligence, and incident response. Build the skills to protect critical infrastructure.",
+    accent: "var(--accent-emerald)",
+    gradient: "linear-gradient(135deg, rgba(16,185,129,0.04), rgba(16,185,129,0.01))",
+    borderGradient: "linear-gradient(135deg, rgba(16,185,129,0.12), transparent, rgba(16,185,129,0.04))",
+    icon: <ShieldIcon size={28} color="var(--accent-emerald)" />,
+    from: -30,
   },
   {
-    id: 1, title: "Data Science", color: "var(--accent-gold)", colorName: "gold",
-    gradient: "linear-gradient(180deg, rgba(245,158,11,0.06), transparent 70%)",
-    borderColor: "rgba(245,158,11,0.15)", btnStyle: { background: "var(--accent-gold)" },
-    iconLarge: <ChartIcon size={160} color="var(--accent-gold)" />,
-    cta: "/signup?role=student",
-    paragraphs: [
-      "Data science is an interdisciplinary field that uses scientific methods, algorithms, and systems to extract knowledge and insights from structured and unstructured data. It combines statistics, computer science, and domain expertise to solve complex problems.",
-      "Our data science curriculum covers machine learning, statistical modeling, data pipelines, and AI systems. You will work with Python, R, and TensorFlow to build predictive models, create data visualizations, and deploy machine learning solutions.",
-      "From data cleaning and exploratory analysis to deep learning and natural language processing, you will gain the skills to transform raw data into actionable intelligence. Real-world datasets and industry projects ensure you graduate with a portfolio that demonstrates your expertise.",
-    ],
+    title: "Data Science",
+    desc: "Machine learning, statistical modeling, data pipelines, and AI systems. Transform raw data into actionable intelligence.",
+    accent: "var(--accent-gold)",
+    gradient: "linear-gradient(135deg, rgba(245,158,11,0.04), rgba(245,158,11,0.01))",
+    borderGradient: "linear-gradient(135deg, rgba(245,158,11,0.12), transparent, rgba(245,158,11,0.04))",
+    icon: <ChartIcon size={28} color="var(--accent-gold)" />,
+    from: 0,
   },
   {
-    id: 2, title: "Finance", color: "var(--accent-rose)", colorName: "rose",
-    gradient: "linear-gradient(180deg, rgba(244,63,94,0.06), transparent 70%)",
-    borderColor: "rgba(244,63,94,0.15)", btnStyle: { background: "var(--accent-rose)" },
-    iconLarge: <GraphIcon size={160} color="var(--accent-rose)" />,
-    cta: "/signup?role=student",
-    paragraphs: [
-      "Finance is the science of managing money, investments, and financial systems. It encompasses everything from personal financial planning to complex quantitative trading strategies used by hedge funds and investment banks worldwide.",
-      "Our finance track covers quantitative analysis, risk modeling, market microstructure, and algorithmic trading. You will learn to analyze financial data, build pricing models, and develop trading algorithms using Python and statistical methods.",
-      "With access to real financial data and trading simulations, you will develop strategies grounded in mathematical finance. Topics include portfolio optimization, options pricing, time series analysis, and machine learning applications in finance.",
-    ],
+    title: "Finance",
+    desc: "Quantitative analysis, risk modeling, market microstructure, and algorithmic trading. Master the mathematics of markets.",
+    accent: "var(--accent-rose)",
+    gradient: "linear-gradient(135deg, rgba(244,63,94,0.04), rgba(244,63,94,0.01))",
+    borderGradient: "linear-gradient(135deg, rgba(244,63,94,0.12), transparent, rgba(244,63,94,0.04))",
+    icon: <DollarIcon size={28} color="var(--accent-rose)" />,
+    from: 30,
   },
 ];
 
@@ -78,9 +69,11 @@ export default function Home() {
             key={i}
             className="absolute rounded-full"
             style={{
-              width: orb.size, height: orb.size,
+              width: orb.size,
+              height: orb.size,
               background: `radial-gradient(circle, ${orb.color}12, transparent 70%)`,
-              left: `${orb.x * 100}%`, top: `${orb.y * 100}%`,
+              left: `${orb.x * 100}%`,
+              top: `${orb.y * 100}%`,
               filter: 'blur(100px)',
             }}
             animate={{ x: [0, (mousePos.x - 0.5) * 80, 0], y: [0, (mousePos.y - 0.5) * 50, 0] }}
@@ -108,9 +101,11 @@ export default function Home() {
             key={i}
             className="absolute"
             style={{
-              width: 1.5, height: 50 + i * 14,
+              width: 1.5,
+              height: 50 + i * 14,
               background: `linear-gradient(to bottom, transparent, ${i % 2 === 0 ? "var(--accent-emerald)" : "var(--accent-gold)"}15, transparent)`,
-              left: `${5 + i * 5.8}%`, top: `${8 + (i % 6) * 14}%`,
+              left: `${5 + i * 5.8}%`,
+              top: `${8 + (i % 6) * 14}%`,
             }}
             animate={{ opacity: [0.1, 0.3, 0.1], height: [50 + i * 14, 70 + i * 18, 50 + i * 14] }}
             transition={{ duration: 3 + i * 0.35, repeat: Infinity, ease: "easeInOut", delay: i * 0.25 }}
@@ -191,14 +186,18 @@ export default function Home() {
             </Link>
           </motion.div>
 
-        </div>
-      </main>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15, delayChildren: 0.2 } } }}
+            className="grid md:grid-cols-3 gap-6 w-full max-w-5xl mb-32"
+          >
+            {subjects.map((subject, i) => (
+              <SubjectCard key={i} subject={subject} index={i} mousePos={mousePos} />
+            ))}
+          </motion.div>
 
-      {/* Scroll-driven subject showcase — one continuous 300vh experience */}
-      <ScrollSubjectShowcase />
-
-      <main className="relative z-10 max-w-7xl mx-auto px-6">
-        <div className="flex flex-col items-center text-center">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -236,264 +235,93 @@ export default function Home() {
               </div>
             </div>
           </motion.div>
-
-          {/* Contact Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ type: "spring", stiffness: 50, damping: 14 }}
-            className="w-full max-w-xl mx-auto mt-32 mb-16 text-center"
-          >
-            <div className="glass rounded-2xl p-10">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
-                style={{ background: 'rgba(16,185,129,0.04)', border: '1px solid rgba(16,185,129,0.06)' }}>
-                <svg className="w-6 h-6" style={{ color: 'var(--accent-emerald)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold mb-3 text-gradient">Have Questions?</h2>
-              <p className="text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>
-                Reach out to us anytime. We are here to help you find the right path.
-              </p>
-              <a href="mailto:cybersyntaxhub@gmail.com"
-                className="text-lg font-semibold hover:underline inline-flex items-center gap-2"
-                style={{ color: 'var(--accent-emerald)' }}>
-                cybersyntaxhub@gmail.com
-                <motion.svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                  animate={{ x: [0, 3, 0] }} transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                </motion.svg>
-              </a>
-            </div>
-          </motion.div>
         </div>
       </main>
     </div>
   );
 }
 
-function ScrollSubjectShowcase() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
+function SubjectCard({
+  subject,
+  index,
+  mousePos,
+}: {
+  subject: typeof subjects[0];
+  index: number;
+  mousePos: { x: number; y: number };
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
-  const opacities = [
-    useTransform(scrollYProgress, [0, 0.25, 0.38], [1, 1, 0]),
-    useTransform(scrollYProgress, [0.25, 0.38, 0.58, 0.71], [0, 1, 1, 0]),
-    useTransform(scrollYProgress, [0.58, 0.71, 1], [0, 1, 1]),
-  ];
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ x: y * -12, y: x * 12 });
+    cardRef.current.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    cardRef.current.style.setProperty("--my", `${e.clientY - rect.top}px`);
+  };
 
-  const subjectIndexMotion = useTransform(scrollYProgress, [0, 0.33, 0.66, 1], [0, 0, 1, 2]);
-  const [activeIndex, setActiveIndex] = useState(0);
-  useMotionValueEvent(subjectIndexMotion, "change", (v) => setActiveIndex(Math.round(v)));
-
-  const localProgress = useTransform(
-    scrollYProgress,
-    [0, 0.33, 0.66, 1],
-    [0, 1, 0, 1],
-  );
-
-  const [localP, setLocalP] = useState(0);
-  useMotionValueEvent(localProgress, "change", (v) => setLocalP(v));
+  const handleMouseLeave = () => setTilt({ x: 0, y: 0 });
 
   return (
-    <div ref={containerRef} className="relative" style={{ height: '300vh' }}>
-      <div className="sticky top-0 h-screen overflow-hidden flex items-center" style={{ background: 'var(--bg-deep)' }}>
-        {/* Background layers — crossfade by scroll */}
-        <div className="absolute inset-0 pointer-events-none">
-          <ScrollCybersecBg scrollYProgress={scrollYProgress} opacity={opacities[0]} active={activeIndex === 0} />
-          <ScrollDataScienceBg scrollYProgress={scrollYProgress} opacity={opacities[1]} active={activeIndex === 1} />
-          <ScrollFinanceBg scrollYProgress={scrollYProgress} opacity={opacities[2]} active={activeIndex === 2} />
-        </div>
-
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 py-10">
-          {subjects.map((s, i) => (
-            <motion.div
-              key={s.id}
-              style={{ opacity: opacities[i] }}
-              className={`flex flex-col ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-12 md:gap-20 ${i !== 0 ? "absolute inset-0 px-6 md:px-12 py-10 pointer-events-none" : ""}`}
-            >
-              <div className="flex-1 text-left">
-                <h2 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-[1.05]"
-                  style={{ background: `linear-gradient(135deg, ${s.color}, var(--text-primary) 70%)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                  {s.title}
-                </h2>
-                <div className="space-y-5 mb-8">
-                  {s.paragraphs.map((p, pi) => (
-                    <motion.p
-                      key={pi}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ type: "spring", stiffness: 40, damping: 12, delay: pi * 0.1 }}
-                      className="text-lg md:text-xl leading-relaxed max-w-xl" style={{ color: 'var(--text-secondary)' }}
-                    >
-                      {p}
-                    </motion.p>
-                  ))}
-                </div>
-                <Link href={s.cta}
-                  className="btn-primary px-10 py-4 rounded-xl text-lg font-semibold relative group overflow-hidden ripple-btn inline-block"
-                  style={s.btnStyle as React.CSSProperties}
-                >
-                  <span className="relative z-10">Explore {s.title}</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/8 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                </Link>
-              </div>
-
-              <div className="flex-1 flex items-center justify-center">
-                <motion.div
-                  className="w-64 h-64 md:w-80 md:h-80 rounded-[2rem] flex items-center justify-center"
-                  style={{
-                    background: `linear-gradient(135deg, ${s.color}10, ${s.color}04)`,
-                    border: `1px solid ${s.borderColor}`,
-                    boxShadow: `0 0 80px ${s.color}08`,
-                  }}
-                >
-                  {s.id === 0 && <ShieldIcon size={160} color={s.color} />}
-                  {s.id === 1 && <ChartIcon size={160} color={s.color} />}
-                  {s.id === 2 && <GraphIcon size={160} color={s.color} />}
-                </motion.div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Progress dots */}
-        <div className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-20">
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              className="w-2.5 h-2.5 rounded-full"
-              style={{
-                background: activeIndex === i ? subjects[i].color : 'rgba(255,255,255,0.08)',
-                boxShadow: activeIndex === i ? `0 0 12px ${subjects[i].color}` : 'none',
-              }}
-              animate={{ scale: activeIndex === i ? 1.4 : 1 }}
-              transition={{ type: "spring", stiffness: 200, damping: 12 }}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ── Scroll-driven background: Cybersecurity ── */
-function ScrollCybersecBg({ scrollYProgress, opacity, active }: { scrollYProgress: MotionValue<number>; opacity: MotionValue<number>; active: boolean }) {
-  const hexRotations = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) =>
-    useTransform(scrollYProgress, [i * 0.03, 0.33 + i * 0.02], [0, 360]),
-  );
-  return (
-    <motion.div style={{ opacity }} className="absolute inset-0 pointer-events-none overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.025]">
-        <svg className="w-full h-full" viewBox="0 0 800 800">
-          <defs>
-            <pattern id="hxs" width="50" height="86.6" patternUnits="userSpaceOnUse">
-              <path d="M25 0L50 14.43V43.3L25 57.74L0 43.3V14.43Z" fill="none" stroke="var(--accent-emerald)" strokeWidth="0.3" />
-              <path d="M25 86.6L50 72.17V43.3L25 57.74L0 43.3V72.17Z" fill="none" stroke="var(--accent-emerald)" strokeWidth="0.3" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#hxs)" />
-        </svg>
-      </div>
-      {Array.from({ length: 12 }).map((_, i) => {
-        const x = 5 + (i % 4) * 25 + Math.random() * 5;
-        const y = 8 + Math.floor(i / 4) * 30 + Math.random() * 8;
-        return (
-          <motion.div key={i} className="absolute" style={{ left: `${x}%`, top: `${y}%` }}>
-            <motion.svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent-emerald)" strokeWidth="0.5" opacity="0.4" style={{ rotate: hexRotations[i] }}>
-              <path d="M12 2L20 7V17L12 22L4 17V7L12 2Z" />
-            </motion.svg>
-          </motion.div>
-        );
-      })}
-      {Array.from({ length: 6 }).map((_, i) => (
-        <motion.div key={`n-${i}`} className="absolute w-1.5 h-1.5 rounded-full" style={{
-          left: `${8 + i * 16}%`, top: `${15 + (i % 2) * 50}%`,
-          background: 'var(--accent-emerald)', boxShadow: '0 0 14px var(--accent-emerald)',
-        }} animate={{ scale: active ? [1, 2.5, 1] : 1, opacity: active ? [0.08, 0.3, 0.08] : 0.04 }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }} />
-      ))}
-    </motion.div>
-  );
-}
-
-/* ── Scroll-driven background: Data Science ── */
-function ScrollDataScienceBg({ scrollYProgress, opacity, active }: { scrollYProgress: MotionValue<number>; opacity: MotionValue<number>; active: boolean }) {
-  const barHeights = Array.from({ length: 20 }, (_, i) =>
-    useTransform(scrollYProgress, [0.25, 0.66], [15 + i * 3, 80 + i * 8]),
-  );
-  return (
-    <motion.div style={{ opacity }} className="absolute inset-0 pointer-events-none overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.018]">
-        <svg className="w-full h-full" viewBox="0 0 1000 600">
-          <defs><pattern id="dtg" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="8" cy="8" r="1" fill="var(--accent-gold)" /></pattern></defs>
-          <rect width="100%" height="100%" fill="url(#dtg)" />
-        </svg>
-      </div>
-      {Array.from({ length: 20 }).map((_, i) => (
-        <motion.div key={i} className="absolute bottom-0" style={{
-          left: `${2 + i * 5}%`, width: 8 + (i % 3) * 4,
-          borderRadius: '4px 4px 0 0',
-          background: `linear-gradient(to top, rgba(245,158,11,0.02), rgba(245,158,11,0.09))`,
-          borderTop: '1px solid rgba(245,158,11,0.06)',
-          height: barHeights[i],
-        }} />
-      ))}
-      {Array.from({ length: 15 }).map((_, i) => (
-        <motion.div key={`c-${i}`} className="absolute text-lg font-mono font-bold"
-          style={{ color: 'rgba(245,158,11,0.03)', left: `${3 + i * 6.5}%` }}
-          animate={{ y: active ? [-40, 120] : [-20, 60], opacity: active ? [0, 0.2, 0] : [0, 0.05, 0] }}
-          transition={{ duration: 6, repeat: Infinity, delay: i * 0.25, ease: "linear" }}>
-          {["Σ", "π", "∂", "λ", "μ", "σ", "Δ", "∫", "∞", "√", "θ", "Ω", "ε", "φ", "ψ"][i]}
-        </motion.div>
-      ))}
-    </motion.div>
-  );
-}
-
-/* ── Scroll-driven background: Finance ── */
-function ScrollFinanceBg({ scrollYProgress, opacity, active }: { scrollYProgress: MotionValue<number>; opacity: MotionValue<number>; active: boolean }) {
-  return (
-    <motion.div style={{ opacity }} className="absolute inset-0 pointer-events-none overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.018]">
-        <svg className="w-full h-full" viewBox="0 0 800 600">
-          <defs><pattern id="fng" width="35" height="35" patternUnits="userSpaceOnUse">
-            <path d="M 35 0 L 0 0 0 35" fill="none" stroke="var(--accent-rose)" strokeWidth="0.25" /></pattern></defs>
-          <rect width="100%" height="100%" fill="url(#fng)" />
-        </svg>
-      </div>
-      {Array.from({ length: 14 }).map((_, i) => {
-        const up = i % 2 === 0;
-        return (
-          <motion.div key={i} className="absolute" style={{
-            left: `${3 + i * 7}%`, bottom: `${15 + Math.floor(i / 2) * 25}%`, width: 6,
-            background: up
-              ? 'linear-gradient(to top, rgba(244,63,94,0.02), rgba(244,63,94,0.07))'
-              : 'linear-gradient(to bottom, rgba(244,63,94,0.02), rgba(244,63,94,0.07))',
-            borderLeft: '1px solid rgba(244,63,94,0.04)', borderRight: '1px solid rgba(244,63,94,0.04)',
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 30, rotateX: subject.from / 2, filter: "blur(4px)" },
+        visible: { opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)", transition: { type: "spring", stiffness: 50, damping: 14 } },
+      }}
+    >
+      <motion.div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        animate={{ rotateX: tilt.x, rotateY: tilt.y }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+        className="card p-6 text-left cursor-default group"
+        style={{ perspective: 900, transformStyle: "preserve-3d" }}
+      >
+        <div
+          className="absolute inset-0 rounded-[inherit] pointer-events-none"
+          style={{ background: subject.gradient, opacity: 0.8 }}
+        />
+        <div
+          className="absolute inset-0 rounded-[inherit] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          style={{ background: subject.borderGradient }}
+        />
+        <motion.div
+          className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 relative"
+          style={{
+            background: `rgba(16,185,129,0.03)`,
+            border: `1px solid rgba(16,185,129,0.06)`,
           }}
-            animate={{ height: active ? [20 + i * 3, 65 + i * 7, 20 + i * 3] : [15 + i * 2, 35 + i * 4, 15 + i * 2] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.12 }} />
-        );
-      })}
-      <svg className="absolute bottom-[18%] left-[5%] right-[5%] h-[22%] opacity-[0.04]" viewBox="0 0 400 80" preserveAspectRatio="none">
-        <motion.path d="M0,60 C20,55 40,65 60,50 C80,35 100,45 120,30 C140,15 160,25 180,20 C200,10 220,30 240,25 C260,15 280,35 300,28 C320,18 340,38 360,32 C380,22 400,35 400,35"
-          fill="none" stroke="var(--accent-rose)" strokeWidth="0.8"
-          animate={{ strokeDashoffset: [800, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "linear" }} strokeDasharray="800" />
-      </svg>
+          whileHover={{ scale: 1.12, rotate: [0, -10, 10, 0] }}
+          transition={{ duration: 0.4 }}
+        >
+          {subject.icon}
+        </motion.div>
+        <h3 className="text-xl font-bold mb-2 tracking-tight" style={{ color: 'var(--text-primary)', transform: 'translateZ(24px)' }}>
+          {subject.title}
+        </h3>
+        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)', transform: 'translateZ(12px)' }}>
+          {subject.desc}
+        </p>
+        <div
+          className="mt-4 h-px w-12 rounded-full"
+          style={{ background: `linear-gradient(90deg, ${subject.accent}, transparent)` }}
+        />
+      </motion.div>
     </motion.div>
   );
 }
 
 function AnimatedGradientWords() {
   const [currentWord, setCurrentWord] = useState(0);
+
   useEffect(() => {
-    const interval = setInterval(() => setCurrentWord((prev) => (prev + 1) % titleWords.length), 3000);
+    const interval = setInterval(() => {
+      setCurrentWord((prev) => (prev + 1) % titleWords.length);
+    }, 3000);
     return () => clearInterval(interval);
   }, []);
 
@@ -505,7 +333,8 @@ function AnimatedGradientWords() {
           className="block"
           style={{
             background: 'linear-gradient(135deg, var(--accent-emerald), var(--accent-rose))',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
           }}
           initial={{ opacity: 0, y: 50, rotateX: -40, filter: 'blur(6px)' }}
           animate={{ opacity: 1, y: 0, rotateX: 0, filter: 'blur(0px)' }}
@@ -534,8 +363,12 @@ function CountUp({ value, suffix, delay }: { value: number; suffix: string; dela
           const step = Math.ceil(value / (duration / 16));
           const timer = setInterval(() => {
             start += step;
-            if (start >= value) { setCount(value); clearInterval(timer); }
-            else setCount(start);
+            if (start >= value) {
+              setCount(value);
+              clearInterval(timer);
+            } else {
+              setCount(start);
+            }
           }, 16);
           observer.disconnect();
         }
@@ -548,7 +381,10 @@ function CountUp({ value, suffix, delay }: { value: number; suffix: string; dela
 
   return (
     <motion.p
-      ref={ref} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+      ref={ref}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
       className="text-4xl md:text-5xl font-bold mb-2"
       style={{ background: 'linear-gradient(135deg, var(--accent-emerald), var(--accent-gold))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
     >
@@ -577,13 +413,30 @@ function Floating3DShapes({ mousePos }: { mousePos: { x: number; y: number } }) 
           <motion.div
             key={i}
             className="absolute"
-            style={{ left: `${shape.x * 100}%`, top: `${shape.y * 100}%`, width: shape.size, height: shape.size, opacity: 0.1 }}
-            animate={{ x: [0, xOffset, 0], y: [0, yOffset, 0], rotate: [0, 180, 360], scale: [1, 1.15, 1] }}
+            style={{
+              left: `${shape.x * 100}%`,
+              top: `${shape.y * 100}%`,
+              width: shape.size,
+              height: shape.size,
+              opacity: 0.1,
+            }}
+            animate={{
+              x: [0, xOffset, 0],
+              y: [0, yOffset, 0],
+              rotate: [0, 180, 360],
+              scale: [1, 1.15, 1],
+            }}
             transition={{ duration: 10 + i * 2, repeat: Infinity, ease: "easeInOut", delay: shape.delay }}
           >
-            {shape.type === "triangle" && <svg viewBox="0 0 30 30" fill="none"><path d="M15 2L28 27H2L15 2Z" stroke={shape.color} strokeWidth="1" fill="none" /></svg>}
-            {shape.type === "diamond" && <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L22 12L12 22L2 12L12 2Z" stroke={shape.color} strokeWidth="1" fill="none" /></svg>}
-            {shape.type === "hexagon" && <svg viewBox="0 0 28 28" fill="none"><path d="M14 2L25 8.5V21.5L14 28L3 21.5V8.5L14 2Z" stroke={shape.color} strokeWidth="1" fill="none" /></svg>}
+            {shape.type === "triangle" && (
+              <svg viewBox="0 0 30 30" fill="none"><path d="M15 2L28 27H2L15 2Z" stroke={shape.color} strokeWidth="1" fill="none" /></svg>
+            )}
+            {shape.type === "diamond" && (
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L22 12L12 22L2 12L12 2Z" stroke={shape.color} strokeWidth="1" fill="none" /></svg>
+            )}
+            {shape.type === "hexagon" && (
+              <svg viewBox="0 0 28 28" fill="none"><path d="M14 2L25 8.5V21.5L14 28L3 21.5V8.5L14 2Z" stroke={shape.color} strokeWidth="1" fill="none" /></svg>
+            )}
           </motion.div>
         );
       })}
