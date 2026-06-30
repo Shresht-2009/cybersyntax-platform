@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { motion, useScroll, useTransform, useSpring, useMotionValueEvent, AnimatePresence, type MotionValue } from "framer-motion";
 import Link from "next/link";
 import { ShieldIcon, ChartIcon, GraphIcon } from "@/components/shared/AnimatedIcons";
@@ -317,12 +317,9 @@ function ScrollRevealSection({ subject, index, scrollYProgress }: {
 }) {
   const start = index * 0.33;
   const end = (index + 1) * 0.33;
-  const mid = (start + end) / 2;
 
-  // Local scroll progress within this subject's range [0, 1]
   const localP = useTransform(scrollYProgress, [start, end], [0, 1]);
 
-  // Individual element reveals
   const bgOpacity = useTransform(localP, [0, 0.06], [0, 0.5]);
   const iconS = useTransform(localP, [0.04, 0.18], [0.3, 1]);
   const iconO = useTransform(localP, [0.04, 0.12], [0, 1]);
@@ -333,21 +330,64 @@ function ScrollRevealSection({ subject, index, scrollYProgress }: {
   const bubbleX2 = useTransform(localP, [0.2, 0.38], [60, 0]);
   const ctaO = useTransform(localP, [0.32, 0.45], [0, 1]);
 
-  // Background motion values
   const bgRotate = useTransform(localP, [0, 1], [0, 360]);
-  const dotO = useTransform(localP, [0, 0.1], [0, 1]);
+  const iconRotate = useTransform(localP, [0, 1], [0, 10]);
+  const dsBgO = useTransform(localP, [0, 0.1], [0, 1]);
+  const finBgO = useTransform(localP, [0, 0.08], [0, 0.5]);
+
+  const sectionOpacity = useTransform(
+    scrollYProgress,
+    [start - 0.05, start + 0.02, end - 0.02, end + 0.05],
+    [0, 1, 1, 0],
+  );
+
+  // Pre-compute all background motion values
+  const hexData = useMemo(() => {
+    const items = [];
+    for (let i = 0; i < 10; i++) {
+      items.push({
+        left: `${5 + (i % 5) * 20}%`,
+        top: `${10 + Math.floor(i / 5) * 50}%`,
+      });
+    }
+    return items;
+  }, []);
+
+  const nodeData = useMemo(() => {
+    return Array.from({ length: 5 }, (_, i) => ({
+      left: `${10 + i * 18}%`,
+      top: `${20 + (i % 2) * 50}%`,
+    }));
+  }, []);
+
+  const dsBarData = useMemo(() => {
+    return Array.from({ length: 16 }, (_, i) => ({
+      left: `${3 + i * 6}%`,
+      width: `${6 + (i % 3) * 3}px`,
+    }));
+  }, []);
+
+  const dsCharData = useMemo(() => ["Σ", "π", "∂", "λ", "μ", "σ", "Δ", "∫", "∞", "√"], []);
+
+  const finCandleData = useMemo(() => {
+    return Array.from({ length: 10 }, (_, i) => ({
+      left: `${5 + i * 9}%`,
+      bottom: `${20 + Math.floor(i / 2) * 22}%`,
+      up: i % 2 === 0,
+    }));
+  }, []);
 
   return (
     <motion.div
-      style={{ opacity: useTransform(scrollYProgress, [start - 0.05, start + 0.02, end - 0.02, end + 0.05], [0, 1, 1, 0]) }}
+      style={{ opacity: sectionOpacity }}
       className={`absolute inset-0 ${index !== 0 ? "pointer-events-none" : ""}`}
     >
-      {/* Background layer */}
       <div className="absolute inset-0 pointer-events-none">
+        {/* Cybersecurity background */}
         {subject.id === 0 && (
           <motion.div style={{ opacity: bgOpacity }} className="absolute inset-0">
             <motion.div className="absolute inset-0 opacity-[0.025]" style={{ rotate: bgRotate }}>
-              <svg className="w-full h-full" viewBox="0 0 800 800">
+              <svg className="w-full h-full" viewBox="0 0 800 800" preserveAspectRatio="none">
                 <defs><pattern id={`hx-${index}`} width="50" height="86.6" patternUnits="userSpaceOnUse">
                   <path d="M25 0L50 14.43V43.3L25 57.74L0 43.3V14.43Z" fill="none" stroke="var(--accent-emerald)" strokeWidth="0.3" />
                   <path d="M25 86.6L50 72.17V43.3L25 57.74L0 43.3V72.17Z" fill="none" stroke="var(--accent-emerald)" strokeWidth="0.3" />
@@ -355,108 +395,77 @@ function ScrollRevealSection({ subject, index, scrollYProgress }: {
                 <rect width="100%" height="100%" fill={`url(#hx-${index})`} />
               </svg>
             </motion.div>
-            {Array.from({ length: 10 }).map((_, i) => (
-              <motion.div
-                key={i} className="absolute"
-                style={{
-                  left: `${5 + (i % 5) * 20}%`, top: `${10 + Math.floor(i / 5) * 50}%`,
-                  opacity: useTransform(localP, [0.06 + i * 0.02, 0.14 + i * 0.02], [0, 0.5]),
-                  rotate: useTransform(localP, [0.06, 0.35], [0, 360 + i * 30]),
-                }}
-              >
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-emerald)" strokeWidth="0.5">
+            {hexData.map((d, i) => (
+              <div key={i} className="absolute" style={{ left: d.left, top: d.top }}>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-emerald)" strokeWidth="0.5" opacity="0.5">
                   <path d="M12 2L20 7V17L12 22L4 17V7L12 2Z" />
                 </svg>
-              </motion.div>
+              </div>
             ))}
-            {Array.from({ length: 5 }).map((_, i) => (
-              <motion.div
-                key={`nd-${i}`} className="absolute w-2 h-2 rounded-full"
-                style={{
-                  left: `${10 + i * 18}%`, top: `${20 + (i % 2) * 50}%`,
-                  background: 'var(--accent-emerald)', boxShadow: '0 0 16px var(--accent-emerald)',
-                  scale: useTransform(localP, [0.1 + i * 0.03, 0.18 + i * 0.03], [0, 2]),
-                  opacity: useTransform(localP, [0.1 + i * 0.03, 0.16 + i * 0.03], [0, 0.35]),
-                }}
-              />
+            {nodeData.map((d, i) => (
+              <div key={`nd-${i}`} className="absolute w-2 h-2 rounded-full"
+                style={{ left: d.left, top: d.top, background: 'var(--accent-emerald)', boxShadow: '0 0 16px var(--accent-emerald)', opacity: 0.2 }} />
             ))}
           </motion.div>
         )}
 
+        {/* Data Science background */}
         {subject.id === 1 && (
-          <motion.div style={{ opacity: dotO }} className="absolute inset-0">
+          <motion.div style={{ opacity: dsBgO }} className="absolute inset-0">
             <div className="absolute inset-0 opacity-[0.018]">
-              <svg className="w-full h-full" viewBox="0 0 1000 600">
+              <svg className="w-full h-full" viewBox="0 0 1000 600" preserveAspectRatio="none">
                 <defs><pattern id={`dt-${index}`} width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r="1" fill="var(--accent-gold)" /></pattern></defs>
                 <rect width="100%" height="100%" fill={`url(#dt-${index})`} />
               </svg>
             </div>
-            {Array.from({ length: 16 }).map((_, i) => (
-              <motion.div
-                key={i} className="absolute bottom-0" style={{
-                  left: `${3 + i * 6}%`, width: 6 + (i % 3) * 3,
-                  borderRadius: '3px 3px 0 0',
-                  background: `linear-gradient(to top, rgba(245,158,11,0.02), rgba(245,158,11,0.08))`,
-                  borderTop: '1px solid rgba(245,158,11,0.05)',
-                  height: useTransform(localP, [0.06 + i * 0.015, 0.3 + i * 0.015], [0, 30 + i * 5]),
-                  opacity: useTransform(localP, [0.06 + i * 0.015, 0.14 + i * 0.015], [0, 0.6]),
-                }}
-              />
+            {dsBarData.map((d, i) => (
+              <div key={i} className="absolute bottom-0" style={{
+                left: d.left, width: d.width,
+                borderRadius: '3px 3px 0 0',
+                background: 'linear-gradient(to top, rgba(245,158,11,0.02), rgba(245,158,11,0.08))',
+                borderTop: '1px solid rgba(245,158,11,0.05)',
+                height: `${20 + i * 3}px`, opacity: 0.4,
+              }} />
             ))}
-            {Array.from({ length: 10 }).map((_, i) => (
-              <motion.div
-                key={`ch-${i}`} className="absolute text-base font-mono font-bold"
-                style={{
-                  color: 'rgba(245,158,11,0.03)', left: `${5 + i * 9}%`,
-                  opacity: useTransform(localP, [0.12 + i * 0.02, 0.2 + i * 0.02], [0, 0.15]),
-                  y: useTransform(localP, [0.12 + i * 0.02, 0.55 + i * 0.02], [-20, 90]),
-                }}
-              >
-                {["Σ", "π", "∂", "λ", "μ", "σ", "Δ", "∫", "∞", "√"][i]}
-              </motion.div>
+            {dsCharData.map((ch, i) => (
+              <div key={`ch-${i}`} className="absolute text-base font-mono font-bold"
+                style={{ color: 'rgba(245,158,11,0.03)', left: `${5 + i * 9}%`, opacity: 0.08 }}>{ch}</div>
             ))}
           </motion.div>
         )}
 
+        {/* Finance background */}
         {subject.id === 2 && (
-          <motion.div style={{ opacity: useTransform(localP, [0, 0.08], [0, 0.5]) }} className="absolute inset-0">
+          <motion.div style={{ opacity: finBgO }} className="absolute inset-0">
             <div className="absolute inset-0 opacity-[0.018]">
-              <svg className="w-full h-full" viewBox="0 0 800 600">
+              <svg className="w-full h-full" viewBox="0 0 800 600" preserveAspectRatio="none">
                 <defs><pattern id={`fg-${index}`} width="30" height="30" patternUnits="userSpaceOnUse">
                   <path d="M 30 0 L 0 0 0 30" fill="none" stroke="var(--accent-rose)" strokeWidth="0.2" /></pattern></defs>
                 <rect width="100%" height="100%" fill={`url(#fg-${index})`} />
               </svg>
             </div>
-            {Array.from({ length: 10 }).map((_, i) => {
-              const up = i % 2 === 0;
-              return (
-                <motion.div key={i} className="absolute" style={{
-                  left: `${5 + i * 9}%`, bottom: `${20 + Math.floor(i / 2) * 22}%`, width: 5,
-                  background: up
-                    ? 'linear-gradient(to top, rgba(244,63,94,0.02), rgba(244,63,94,0.06))'
-                    : 'linear-gradient(to bottom, rgba(244,63,94,0.02), rgba(244,63,94,0.06))',
-                  borderLeft: '1px solid rgba(244,63,94,0.03)', borderRight: '1px solid rgba(244,63,94,0.03)',
-                  height: useTransform(localP, [0.05 + i * 0.02, 0.25 + i * 0.02], [0, 20 + i * 4]),
-                  opacity: useTransform(localP, [0.05 + i * 0.02, 0.12 + i * 0.02], [0, 0.5]),
-                }} />
-              );
-            })}
-            <svg className="absolute bottom-[20%] left-[5%] right-[5%] h-[20%] opacity-[0.035]" viewBox="0 0 400 80" preserveAspectRatio="none">
-              <motion.path
-                d="M0,60 C20,55 40,65 60,50 C80,35 100,45 120,30 C140,15 160,25 180,20 C200,10 220,30 240,25 C260,15 280,35 300,28 C320,18 340,38 360,32 C380,22 400,35 400,35"
-                fill="none" stroke="var(--accent-rose)" strokeWidth="0.8"
-                strokeDasharray="800"
-                strokeDashoffset={useTransform(localP, [0.08, 0.45], [800, 0])}
-              />
-            </svg>
+            {finCandleData.map((d, i) => (
+              <div key={i} className="absolute" style={{
+                left: d.left, bottom: d.bottom, width: 5,
+                background: d.up
+                  ? 'linear-gradient(to top, rgba(244,63,94,0.02), rgba(244,63,94,0.06))'
+                  : 'linear-gradient(to bottom, rgba(244,63,94,0.02), rgba(244,63,94,0.06))',
+                borderLeft: '1px solid rgba(244,63,94,0.03)', borderRight: '1px solid rgba(244,63,94,0.03)',
+                height: `${15 + i * 3}px`, opacity: 0.3,
+              }} />
+            ))}
+            <div className="absolute bottom-[20%] left-[5%] right-[5%] h-[20%] opacity-[0.03]">
+              <svg className="w-full h-full" viewBox="0 0 400 80" preserveAspectRatio="none">
+                <path d="M0,60 C20,55 40,65 60,50 C80,35 100,45 120,30 C140,15 160,25 180,20 C200,10 220,30 240,25 C260,15 280,35 300,28 C320,18 340,38 360,32 C380,22 400,35 400,35"
+                  fill="none" stroke="var(--accent-rose)" strokeWidth="0.8" />
+              </svg>
+            </div>
           </motion.div>
         )}
       </div>
 
-      {/* Content */}
       <div className="relative z-10 w-full h-full flex items-center">
         <div className={`w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-8 md:gap-16`}>
-          {/* Icon */}
           <motion.div
             style={{ scale: iconS, opacity: iconO, y: iconY }}
             className="flex-1 flex items-center justify-center"
@@ -468,9 +477,7 @@ function ScrollRevealSection({ subject, index, scrollYProgress }: {
                 boxShadow: `0 0 100px ${subject.color}06`,
               }}
             >
-              <motion.div
-                style={{ rotate: useTransform(localP, [0, 1], [0, 10]) }}
-              >
+              <motion.div style={{ rotate: iconRotate }}>
                 {subject.id === 0 && <ShieldIcon size={140} color={subject.color} />}
                 {subject.id === 1 && <ChartIcon size={140} color={subject.color} />}
                 {subject.id === 2 && <GraphIcon size={140} color={subject.color} />}
@@ -478,7 +485,6 @@ function ScrollRevealSection({ subject, index, scrollYProgress }: {
             </div>
           </motion.div>
 
-          {/* Text + bubble */}
           <div className="flex-1 flex flex-col items-start gap-5">
             <motion.h2
               style={{ opacity: titleO, y: titleY2 }}
@@ -492,7 +498,6 @@ function ScrollRevealSection({ subject, index, scrollYProgress }: {
               </span>
             </motion.h2>
 
-            {/* Message bubble */}
             <motion.div
               style={{ opacity: bubbleO, x: bubbleX2 }}
               className="relative max-w-sm"
@@ -507,7 +512,6 @@ function ScrollRevealSection({ subject, index, scrollYProgress }: {
                   {subject.id === 2 && "Learn quantitative analysis, algorithmic trading, and risk modeling with real financial data and market simulations."}
                 </p>
               </div>
-              {/* Bubble tail */}
               <div className="absolute -left-2 top-1/2 -translate-y-1/2 w-3 h-3 rotate-45" style={{
                 background: 'var(--glass-bg)',
                 borderLeft: `1px solid ${subject.borderColor}`,
@@ -516,7 +520,6 @@ function ScrollRevealSection({ subject, index, scrollYProgress }: {
               }} />
             </motion.div>
 
-            {/* CTA */}
             <motion.div style={{ opacity: ctaO }}>
               <Link href={subject.cta}
                 className="btn-primary px-8 py-3.5 rounded-xl text-base font-semibold relative group overflow-hidden ripple-btn inline-block"
