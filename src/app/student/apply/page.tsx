@@ -23,7 +23,7 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
   return (
     <div className="flex gap-2 mb-6">
       {Array.from({ length: total }).map((_, i) => (
-        <div key={i} className={`h-1.5 flex-1 rounded-full transition-all ${i <= current ? "bg-cyan-400" : "bg-white/10"}`} />
+        <div key={i} className={`h-1.5 flex-1 rounded-full transition-all ${i <= current ? "bg-cyan-400" : "bg-[var(--border-primary)]"}`} />
       ))}
     </div>
   );
@@ -70,12 +70,12 @@ export default function ApplyPage() {
   if (profile?.status === "PENDING") {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="glass rounded-2xl p-8 text-center max-w-md">
+        <div className="card p-8 text-center max-w-md">
           <div className="w-16 h-16 rounded-full bg-yellow-500/10 flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
           </div>
           <h2 className="text-xl font-semibold mb-2">Application Pending</h2>
-          <p className="text-[#8888aa] text-sm">Your application is under review. You&apos;ll be notified once it&apos;s approved.</p>
+          <p className="text-[var(--text-secondary)] text-sm">Your application is under review. You&apos;ll be notified once it&apos;s approved.</p>
         </div>
       </div>
     );
@@ -84,7 +84,7 @@ export default function ApplyPage() {
   if (!profile) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-[#8888aa]">Loading...</div>
+        <div className="text-[var(--text-secondary)]">Loading...</div>
       </div>
     );
   }
@@ -134,8 +134,10 @@ export default function ApplyPage() {
   return (
     <div className="max-w-2xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-3xl font-bold cyber-text-gradient mb-1">Application</h1>
-        <p className="text-[#8888aa] mb-4">Step {step + 1} of {totalSteps} — {steps[step].charAt(0).toUpperCase() + steps[step].slice(1)}</p>
+        <div className="page-header">
+          <h1 className="text-gradient">Application</h1>
+          <p>Step {step + 1} of {totalSteps} — {steps[step].charAt(0).toUpperCase() + steps[step].slice(1)}</p>
+        </div>
         <StepIndicator current={step} total={totalSteps} />
       </motion.div>
 
@@ -145,13 +147,13 @@ export default function ApplyPage() {
 
       <AnimatePresence mode="wait">
         <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }}>
-          <div className="glass rounded-2xl p-6 space-y-5">
+          <div className="card p-6 space-y-5">
 
             {step === 0 && (
               <>
                 <div>
-                  <label className="block text-sm text-[#8888aa] mb-1">Select Program</label>
-                  <select value={program} onChange={(e) => setProgram(e.target.value)} className="cyber-input w-full px-4 py-2.5 rounded-lg" required>
+                  <label className="block text-sm text-[var(--text-secondary)] mb-1">Select Program</label>
+                  <select value={program} onChange={(e) => setProgram(e.target.value)} className="select" required>
                     <option value="">Choose a program...</option>
                     <option value="Cybersecurity">Cybersecurity</option>
                     <option value="Data Science">Data Science</option>
@@ -161,7 +163,7 @@ export default function ApplyPage() {
                     <option value="All Three">All Three</option>
                   </select>
                 </div>
-                <div className="p-4 rounded-xl bg-white/5 text-sm text-[#8888aa]">
+                <div className="p-4 rounded-xl bg-white/5 text-sm text-[var(--text-secondary)]">
                   <p className="font-medium text-white mb-1">Why this matters</p>
                   <p>Your program selection helps us match you with the right mentor and learning path. You can discuss adjustments during your onboarding.</p>
                 </div>
@@ -170,17 +172,17 @@ export default function ApplyPage() {
 
             {step === 1 && questions.map((q) => (
               <div key={q.id}>
-                <label className="block text-sm text-[#8888aa] mb-1">{q.label}</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-1">{q.label}</label>
                 <textarea value={answers[q.id] || ""} onChange={(e) => updateAnswer(q.id, e.target.value)}
-                  className="cyber-input w-full px-4 py-2.5 rounded-lg min-h-[100px] resize-y" placeholder={q.placeholder} />
+                  className="textarea w-full min-h-[100px]" placeholder={q.placeholder} />
               </div>
             ))}
 
             {step === 2 && (
               <>
                 <div>
-                  <label className="block text-sm text-[#8888aa] mb-1">Experience Level</label>
-                  <select value={experience} onChange={(e) => setExperience(e.target.value)} className="cyber-input w-full px-4 py-2.5 rounded-lg">
+                  <label className="block text-sm text-[var(--text-secondary)] mb-1">Experience Level</label>
+                  <select value={experience} onChange={(e) => setExperience(e.target.value)} className="select">
                     <option value="">Select your level...</option>
                     <option value="Beginner">Beginner — No prior experience</option>
                     <option value="Intermediate">Intermediate — Some coursework or projects</option>
@@ -189,9 +191,9 @@ export default function ApplyPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm text-[#8888aa] mb-1">Describe your background</label>
+                  <label className="block text-sm text-[var(--text-secondary)] mb-1">Describe your background</label>
                   <textarea value={answers["background"] || ""} onChange={(e) => updateAnswer("background", e.target.value)}
-                    className="cyber-input w-full px-4 py-2.5 rounded-lg min-h-[120px] resize-y"
+                    className="textarea w-full min-h-[120px]"
                     placeholder="Tell us about your educational background, any relevant courses, projects, or work experience..." />
                 </div>
               </>
@@ -200,22 +202,22 @@ export default function ApplyPage() {
             {step === 3 && (
               <>
                 <div>
-                  <label className="block text-sm text-[#8888aa] mb-2">Resume / Application</label>
+                  <label className="block text-sm text-[var(--text-secondary)] mb-2">Resume / Application</label>
                   <div className="flex gap-2 mb-3">
                     {(["FILE", "TEXT"] as const).map((t) => (
                       <button key={t} type="button" onClick={() => setResumeType(t)}
-                        className={`flex-1 py-2 rounded-lg text-xs transition-all ${resumeType === t ? "cyber-btn" : "bg-white/5"}`}>
+                        className={`flex-1 py-2 rounded-lg text-xs transition-all ${resumeType === t ? "btn-primary" : "bg-[var(--bg-card)] border border-[var(--border-primary)]"}`}>
                         {t === "FILE" ? "Upload File" : "Write"}
                       </button>
                     ))}
                   </div>
                   {resumeType === "TEXT" ? (
                     <textarea value={resumeText} onChange={(e) => setResumeText(e.target.value)}
-                      className="cyber-input w-full px-4 py-2.5 rounded-lg min-h-[200px] resize-y"
+                      className="textarea w-full min-h-[200px]"
                       placeholder="Write about your experience, skills, projects, and why you want to join..." required />
                   ) : (
                     <div className="space-y-3">
-                      <div className="border-2 border-dashed border-white/10 rounded-xl p-8 text-center hover:border-cyan-500/30 transition-all">
+                      <div className="border-2 border-dashed border-[var(--border-primary)] rounded-xl p-8 text-center hover:border-cyan-500/30 transition-all">
                         <input
                           type="file"
                           accept=".pdf,.jpg,.jpeg,.png"
@@ -230,8 +232,8 @@ export default function ApplyPage() {
                           <div className="w-12 h-12 rounded-full bg-cyan-500/10 flex items-center justify-center mx-auto mb-3">
                             <svg className="w-6 h-6 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
                           </div>
-                          <p className="text-sm text-[#8888aa]">{isUploading ? "Uploading..." : resumeFileUrl ? "Uploaded! Click to replace" : "Click to upload PDF or Image"}</p>
-                          <p className="text-xs text-[#555] mt-1">PDF, PNG, JPG (max 4MB)</p>
+                          <p className="text-sm text-[var(--text-secondary)]">{isUploading ? "Uploading..." : resumeFileUrl ? "Uploaded! Click to replace" : "Click to upload PDF or Image"}</p>
+                          <p className="text-xs text-[var(--text-muted)] mt-1">PDF, PNG, JPG (max 4MB)</p>
                         </label>
                       </div>
                       {resumeFileUrl && (
@@ -248,9 +250,9 @@ export default function ApplyPage() {
 
             {step === 4 && rolePlayScenarios.map((s) => (
               <div key={s.id}>
-                <label className="block text-sm text-[#8888aa] mb-1">{s.label}</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-1">{s.label}</label>
                 <textarea value={rolePlayAnswers[s.id] || ""} onChange={(e) => updateRolePlay(s.id, e.target.value)}
-                  className="cyber-input w-full px-4 py-2.5 rounded-lg min-h-[100px] resize-y" placeholder={s.placeholder} />
+                  className="textarea w-full min-h-[100px]" placeholder={s.placeholder} />
               </div>
             ))}
 
@@ -259,19 +261,19 @@ export default function ApplyPage() {
                 <h3 className="text-lg font-semibold">Review Your Application</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between p-3 rounded-lg bg-white/5">
-                    <span className="text-[#8888aa]">Program</span>
+                    <span className="text-[var(--text-secondary)]">Program</span>
                     <span>{program}</span>
                   </div>
                   <div className="flex justify-between p-3 rounded-lg bg-white/5">
-                    <span className="text-[#8888aa]">Experience</span>
+                    <span className="text-[var(--text-secondary)]">Experience</span>
                     <span>{experience}</span>
                   </div>
                   <div className="flex justify-between p-3 rounded-lg bg-white/5">
-                    <span className="text-[#8888aa]">Resume</span>
+                    <span className="text-[var(--text-secondary)]">Resume</span>
                     <span>{resumeType === "FILE" ? "File uploaded" : "Written application"}</span>
                   </div>
                   <div className="flex justify-between p-3 rounded-lg bg-white/5">
-                    <span className="text-[#8888aa]">Questions answered</span>
+                    <span className="text-[var(--text-secondary)]">Questions answered</span>
                     <span>{Object.keys(answers).length + rolePlayScenarios.length}</span>
                   </div>
                 </div>
@@ -284,17 +286,17 @@ export default function ApplyPage() {
 
       <div className="flex justify-between mt-6">
         <button onClick={prevStep} disabled={step === 0}
-          className="cyber-btn-outline px-6 py-2.5 rounded-lg text-sm disabled:opacity-30">
+          className="btn-outline disabled:opacity-30">
           Back
         </button>
         {step < totalSteps - 1 ? (
           <button onClick={nextStep} disabled={!canProceed()}
-            className="cyber-btn px-6 py-2.5 rounded-lg text-sm disabled:opacity-50">
+            className="btn-primary disabled:opacity-50">
             Continue
           </button>
         ) : (
           <button onClick={handleSubmit} disabled={loading}
-            className="cyber-btn px-6 py-2.5 rounded-lg text-sm disabled:opacity-50">
+            className="btn-primary disabled:opacity-50">
             {loading ? "Submitting..." : "Submit Application"}
           </button>
         )}

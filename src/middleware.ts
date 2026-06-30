@@ -44,6 +44,17 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/mentor/dashboard", request.url));
     }
 
+    if (pathname.startsWith("/student") && user.role === "STUDENT") {
+      const studentStatus = user.studentStatus;
+      if (studentStatus && !["ACCEPTED"].includes(studentStatus)) {
+        const allowedPaths = ["/student/apply", "/api/student/apply", "/api/auth"];
+        const isAllowed = allowedPaths.some((p) => pathname === p || pathname.startsWith(p));
+        if (!isAllowed) {
+          return NextResponse.redirect(new URL("/student/apply", request.url));
+        }
+      }
+    }
+
     if (pathname.startsWith("/api/mentor") && user.role !== "MENTOR") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }

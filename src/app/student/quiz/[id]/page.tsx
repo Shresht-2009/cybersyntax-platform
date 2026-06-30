@@ -122,12 +122,12 @@ export default function QuizPage() {
   if (submitted && attempt) {
     return (
       <div className="max-w-2xl mx-auto py-20">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-2xl p-8 text-center">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card p-8 text-center">
           <div className="w-16 h-16 rounded-full bg-cyan-500/10 flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
           </div>
           <h2 className="text-2xl font-bold mb-2">Quiz Submitted</h2>
-          <p className="text-lg cyber-text-gradient font-semibold mb-2">
+          <p className="text-lg text-gradient font-semibold mb-2">
             Score: {attempt.score?.toFixed(0) || 0}%
           </p>
           {violations > 0 && (
@@ -137,7 +137,7 @@ export default function QuizPage() {
             <p className="text-sm text-red-400 mb-2">Auto-submitted due to {timeLeft === 0 ? "time limit" : "security violation"}</p>
           )}
           <button onClick={() => router.push("/student/results")}
-            className="cyber-btn mt-4 px-6 py-2.5 rounded-lg">
+            className="btn-primary mt-4">
             View Results
           </button>
         </motion.div>
@@ -145,7 +145,14 @@ export default function QuizPage() {
     );
   }
 
-  if (!quiz) return <div className="text-center py-20 text-[#8888aa]">Loading...</div>;
+  if (!quiz) return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="flex flex-col items-center gap-3">
+        <div className="skeleton w-8 h-8 rounded-full" />
+        <div className="skeleton w-48 h-4" />
+      </div>
+    </div>
+  );
 
   const questions = quiz.questions || [];
   const current = questions[currentIndex];
@@ -160,8 +167,8 @@ export default function QuizPage() {
     <div className="max-w-3xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold cyber-text-gradient">{quiz.title}</h1>
-          <p className="text-sm text-[#8888aa]">
+          <h1 className="text-2xl font-bold text-gradient">{quiz.title}</h1>
+          <p className="text-sm text-[var(--text-secondary)]">
             Question {currentIndex + 1} of {questions.length}
           </p>
         </div>
@@ -172,30 +179,30 @@ export default function QuizPage() {
             </div>
           )}
           {violations > 0 && (
-            <div className="text-sm text-yellow-400">{violations}/3 violations</div>
+            <span className="badge badge-yellow">{violations}/3 violations</span>
           )}
         </div>
       </div>
 
-      <div className="w-full bg-[var(--cyber-border)] rounded-full h-1 mb-8">
-        <div className="bg-cyan-400 h-1 rounded-full transition-all" style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }} />
+      <div className="w-full bg-[var(--border-primary)] rounded-full h-1.5 mb-8">
+        <div className="bg-cyan-400 h-1.5 rounded-full transition-all" style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }} />
       </div>
 
       {current && (
-        <motion.div key={current.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="glass rounded-2xl p-6 mb-6">
+        <motion.div key={current.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="card p-6 mb-6">
           <h2 className="text-xl font-semibold mb-6">{current.text}</h2>
 
           <div className="space-y-3">
             {current.type === "SHORT_ANSWER" ? (
               <textarea value={answers[current.id] || ""} onChange={(e) => selectAnswer(current.id, e.target.value)}
-                className="cyber-input w-full px-4 py-2.5 rounded-lg min-h-[100px] resize-y" placeholder="Type your answer..." />
+                className="textarea w-full min-h-[100px]" placeholder="Type your answer..." />
             ) : (
               current.options?.map((option: string, i: number) => (
                 <button key={i} onClick={() => selectAnswer(current.id, option)}
                   className={`w-full p-4 rounded-xl text-left transition-all ${
                     answers[current.id] === option
                       ? "bg-cyan-500/20 border border-cyan-500/40 text-cyan-300"
-                      : "glass hover:bg-white/10"
+                      : "card hover:bg-white/10"
                   }`}>
                   <div className="flex items-center gap-3">
                     <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
@@ -216,29 +223,29 @@ export default function QuizPage() {
 
       <div className="flex items-center justify-between">
         <button onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))} disabled={currentIndex === 0}
-          className="cyber-btn-outline px-4 py-2 rounded-lg text-sm disabled:opacity-30">
+          className="btn-outline disabled:opacity-30">
           Previous
         </button>
 
         <div className="flex gap-2">
           {currentIndex < questions.length - 1 ? (
             <button onClick={() => setCurrentIndex((i) => i + 1)}
-              className="cyber-btn px-4 py-2 rounded-lg text-sm">
+              className="btn-primary">
               Next
             </button>
           ) : (
-            <button onClick={() => submitQuiz()} className="cyber-btn px-6 py-2 rounded-lg text-sm">
+            <button onClick={() => submitQuiz()} className="btn-primary">
               Submit Quiz
             </button>
           )}
         </div>
       </div>
 
-      <div className="flex gap-1 mt-6 justify-center">
+      <div className="flex gap-1.5 mt-6 justify-center">
         {questions.map((_: any, i: number) => (
           <button key={i} onClick={() => setCurrentIndex(i)}
-            className={`w-8 h-1 rounded-full transition-all ${
-              i === currentIndex ? "bg-cyan-400 w-12" : answers[questions[i]?.id] ? "bg-cyan-500/40" : "bg-[var(--cyber-border)]"
+            className={`h-2 rounded-full transition-all ${
+              i === currentIndex ? "bg-cyan-400 w-8" : answers[questions[i]?.id] ? "bg-cyan-500/40 w-2" : "bg-[var(--border-primary)] w-2"
             }`} />
         ))}
       </div>

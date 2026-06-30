@@ -52,46 +52,48 @@ export default function AnnouncementsPage() {
 
   return (
     <div className="space-y-8">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-3xl font-bold cyber-text-gradient mb-2">Announcements</h1>
-        <p className="text-[#8888aa]">Create and manage announcements for your students.</p>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="page-header">
+        <h1 className="text-3xl font-bold text-gradient mb-2">Announcements</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Create and manage announcements for your students.</p>
       </motion.div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="glass rounded-2xl p-6"
+        className="card p-6"
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="cyber-input w-full px-4 py-2.5 rounded-lg text-lg"
+            className="input w-full text-lg"
             placeholder="Announcement title"
             required
           />
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="cyber-input w-full px-4 py-2.5 rounded-lg min-h-[120px] resize-y"
+            className="textarea w-full min-h-[120px]"
             placeholder="Write your announcement..."
             required
           />
           <div className="space-y-2">
             <div className="flex gap-2">
               <button type="button" onClick={() => imageInputRef.current?.click()}
-                className={`flex-1 py-2.5 rounded-lg text-sm border transition-all ${mediaType === "image" ? "bg-cyan-500/10 border-cyan-500/30 text-cyan-400" : "border-white/10 text-[#8888aa] hover:border-white/20"}`}>
+                className={`flex-1 py-2.5 rounded-lg text-sm transition-all ${mediaType === "image" ? "btn-primary" : "bg-[var(--bg-secondary)]"}`}
+                style={mediaType !== "image" ? { color: 'var(--text-secondary)' } : {}}>
                 {isImageUploading ? "Uploading..." : imageUrl ? "Image Added ✓" : "Add Image"}
               </button>
               <button type="button" onClick={() => videoInputRef.current?.click()}
-                className={`flex-1 py-2.5 rounded-lg text-sm border transition-all ${mediaType === "video" ? "bg-cyan-500/10 border-cyan-500/30 text-cyan-400" : "border-white/10 text-[#8888aa] hover:border-white/20"}`}>
+                className={`flex-1 py-2.5 rounded-lg text-sm transition-all ${mediaType === "video" ? "btn-primary" : "bg-[var(--bg-secondary)]"}`}
+                style={mediaType !== "video" ? { color: 'var(--text-secondary)' } : {}}>
                 {isVideoUploading ? "Uploading..." : videoUrl ? "Video Added ✓" : "Add Video"}
               </button>
               {mediaType !== "none" && (
                 <button type="button" onClick={() => { setImageUrl(""); setVideoUrl(""); setMediaType("none"); }}
-                  className="px-3 py-2.5 rounded-lg text-sm text-red-400 hover:bg-red-500/10 transition-all">
+                  className="px-3 py-2.5 rounded-lg text-sm" style={{ color: 'var(--accent-red)' }}>
                   ✕
                 </button>
               )}
@@ -104,7 +106,7 @@ export default function AnnouncementsPage() {
           <button
             type="submit"
             disabled={loading}
-            className="cyber-btn px-6 py-2.5 rounded-lg"
+            className="btn-primary px-6 py-2.5"
           >
             {loading ? "Publishing..." : "Publish Announcement"}
           </button>
@@ -113,7 +115,15 @@ export default function AnnouncementsPage() {
 
       <div className="space-y-4">
         {announcements.length === 0 && (
-          <div className="text-center py-12 text-[#8888aa]">No announcements yet.</div>
+          <div className="empty-state">
+            <div className="empty-state-icon">
+              <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+              </svg>
+            </div>
+            <h3 className="empty-state-title">No announcements yet</h3>
+            <p className="empty-state-desc">Publish your first announcement above.</p>
+          </div>
         )}
         {announcements.map((ann, i) => (
           <motion.div
@@ -121,7 +131,7 @@ export default function AnnouncementsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="glass rounded-2xl p-6"
+            className="card p-6"
           >
             {ann.imageUrl && (
               <img src={ann.imageUrl} alt="" className="w-full max-h-64 object-cover rounded-xl mb-4" />
@@ -131,9 +141,13 @@ export default function AnnouncementsPage() {
                 <source src={ann.videoUrl} />
               </video>
             )}
-            <h3 className="text-xl font-semibold mb-2">{ann.title}</h3>
-            <p className="text-[#8888aa] whitespace-pre-wrap">{ann.content}</p>
-            <p className="text-xs text-[#555] mt-3">
+            <div className="flex items-center gap-2 mb-3">
+              {ann.imageUrl && <span className="badge badge-green">Image</span>}
+              {ann.videoUrl && <span className="badge badge-purple">Video</span>}
+            </div>
+            <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>{ann.title}</h3>
+            <p className="whitespace-pre-wrap" style={{ color: 'var(--text-secondary)' }}>{ann.content}</p>
+            <p className="text-xs mt-3" style={{ color: 'var(--text-muted)' }}>
               {new Date(ann.createdAt).toLocaleDateString("en-US", {
                 year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit",
               })}

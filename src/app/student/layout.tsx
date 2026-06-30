@@ -20,11 +20,11 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
 
   return (
     <div className="min-h-screen flex">
-      <aside className="fixed inset-y-0 left-0 z-40 w-64 glass border-r border-[var(--cyber-border)] hidden lg:flex flex-col">
-        <div className="p-4 border-b border-[var(--cyber-border)]">
+      <aside className="fixed inset-y-0 left-0 z-40 w-64 bg-card border-r border-[var(--border-primary)] hidden lg:flex flex-col">
+        <div className="p-4 border-b border-[var(--border-primary)]">
           <Link href="/student/dashboard" className="flex items-center gap-2">
             <CyberLogo />
-            <span className="text-lg font-bold cyber-text-gradient">Student Portal</span>
+            <span className="text-lg font-bold text-gradient">Student Portal</span>
           </Link>
         </div>
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
@@ -32,29 +32,27 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
             const active = pathname === item.href || pathname.startsWith(item.href + "/");
             return (
               <Link key={item.href} href={item.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
-                  active ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20" : "text-[#8888aa] hover:text-white hover:bg-white/5"
-                }`}>
+                className={`nav-link ${active ? "active" : ""}`}>
                 <item.icon active={active} />
                 {item.label}
               </Link>
             );
           })}
         </nav>
-        <div className="p-3 border-t border-[var(--cyber-border)]">
+        <div className="p-3 border-t border-[var(--border-primary)]">
           <button onClick={() => signOut()}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-500/10 w-full transition-all">
+            className="btn-ghost flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-500/10 w-full transition-all">
             <LogoutIcon />
             Sign Out
           </button>
         </div>
       </aside>
 
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 glass border-b border-[var(--cyber-border)] p-3 flex items-center justify-between">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-card border-b border-[var(--border-primary)] p-3 flex items-center justify-between">
         <button onClick={() => setSidebarOpen(true)} className="p-2 hover:bg-white/5 rounded-lg">
           <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
         </button>
-        <span className="text-lg font-bold cyber-text-gradient">Student Portal</span>
+        <span className="text-lg font-bold text-gradient">Student Portal</span>
         <div className="w-10" />
       </div>
 
@@ -64,9 +62,9 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
             onClick={() => setSidebarOpen(false)} className="fixed inset-0 z-50 bg-black/50 lg:hidden">
             <motion.aside initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }}
               onClick={(e) => e.stopPropagation()}
-              className="fixed inset-y-0 left-0 w-64 glass border-r border-[var(--cyber-border)] flex flex-col">
-              <div className="p-4 border-b border-[var(--cyber-border)] flex justify-between items-center">
-                <span className="text-lg font-bold cyber-text-gradient">Student Portal</span>
+              className="fixed inset-y-0 left-0 w-64 bg-card border-r border-[var(--border-primary)] flex flex-col">
+              <div className="p-4 border-b border-[var(--border-primary)] flex justify-between items-center">
+                <span className="text-lg font-bold text-gradient">Student Portal</span>
                 <button onClick={() => setSidebarOpen(false)} className="p-1 hover:bg-white/5 rounded-lg">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
@@ -74,16 +72,14 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
               <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
                 {navItems.map((item) => (
                   <Link key={item.href} href={item.href} onClick={() => setSidebarOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
-                      pathname === item.href ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20" : "text-[#8888aa] hover:text-white hover:bg-white/5"
-                    }`}>
+                    className={`nav-link ${pathname === item.href ? "active" : ""}`}>
                     <item.icon active={pathname === item.href} />
                     {item.label}
                   </Link>
                 ))}
               </nav>
-              <div className="p-3 border-t border-[var(--cyber-border)]">
-                <button onClick={() => signOut()} className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-500/10 w-full transition-all">
+              <div className="p-3 border-t border-[var(--border-primary)]">
+                <button onClick={() => signOut()} className="btn-ghost flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-500/10 w-full transition-all">
                   <LogoutIcon />
                   Sign Out
                 </button>

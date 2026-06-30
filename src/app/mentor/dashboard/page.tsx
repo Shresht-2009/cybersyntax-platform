@@ -21,11 +21,12 @@ export default function MentorDashboard() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
+        className="page-header"
       >
-        <h1 className="text-3xl font-bold mb-2">
-          Welcome back, <span className="cyber-text-gradient">{(session?.user as any)?.name}</span>
+        <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+          Welcome back, <span className="text-gradient">{(session?.user as any)?.name}</span>
         </h1>
-        <p className="text-[#8888aa]">Here&apos;s what&apos;s happening with your mentorship program.</p>
+        <p style={{ color: 'var(--text-secondary)' }}>Here&apos;s what&apos;s happening with your mentorship program.</p>
       </motion.div>
 
       <motion.div
@@ -41,13 +42,18 @@ export default function MentorDashboard() {
           { label: "Balance", value: `$${stats?.totalFunds ?? 0}`, icon: "💰", href: "/mentor/finance" },
         ].map((card, i) => (
           <Link key={i} href={card.href}>
-            <div className="glass rounded-2xl p-5 glass-hover">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 + i * 0.05 }}
+              className="stat-card"
+            >
               <div className="flex items-center justify-between mb-3">
                 <span className="text-2xl">{card.icon}</span>
               </div>
-              <p className="text-2xl font-bold">{card.value}</p>
-              <p className="text-sm text-[#8888aa]">{card.label}</p>
-            </div>
+              <p className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{card.value}</p>
+              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{card.label}</p>
+            </motion.div>
           </Link>
         ))}
       </motion.div>
@@ -56,9 +62,9 @@ export default function MentorDashboard() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="glass rounded-2xl p-6"
+        className="card p-6"
       >
-        <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+        <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Quick Actions</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { label: "New Announcement", href: "/mentor/announcements", icon: "📢" },
@@ -69,10 +75,13 @@ export default function MentorDashboard() {
             <Link
               key={i}
               href={action.href}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white/5 hover:bg-cyan-500/10 transition-all"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl transition-all"
+              style={{ background: 'rgba(var(--accent-cyan-rgb), 0.05)' }}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(var(--accent-cyan-rgb), 0.1)'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(var(--accent-cyan-rgb), 0.05)'}
             >
               <span className="text-2xl">{action.icon}</span>
-              <span className="text-sm text-center">{action.label}</span>
+              <span className="text-sm text-center" style={{ color: 'var(--text-secondary)' }}>{action.label}</span>
             </Link>
           ))}
         </div>

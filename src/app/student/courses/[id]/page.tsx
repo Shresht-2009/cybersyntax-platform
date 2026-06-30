@@ -16,19 +16,28 @@ export default function StudentCourseDetailPage() {
       .catch(() => {});
   }, [id]);
 
-  if (!course) return <div className="text-center py-20 text-[#8888aa]">Loading...</div>;
+  if (!course) return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="flex flex-col items-center gap-3">
+        <div className="skeleton w-8 h-8 rounded-full" />
+        <div className="skeleton w-48 h-4" />
+      </div>
+    </div>
+  );
 
   return (
     <div className="space-y-8">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-3xl font-bold cyber-text-gradient mb-2">{course.title}</h1>
-        <p className="text-[#8888aa]">{course.description}</p>
+        <div className="page-header">
+          <h1 className="text-gradient">{course.title}</h1>
+          <p>{course.description}</p>
+        </div>
       </motion.div>
 
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           {activeLesson ? (
-            <motion.div key={activeLesson.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass rounded-2xl p-6">
+            <motion.div key={activeLesson.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="card p-6">
               <h2 className="text-2xl font-semibold mb-4">{activeLesson.title}</h2>
               {activeLesson.type === "VIDEO" && activeLesson.videoUrl ? (
                 <div className="aspect-video rounded-xl overflow-hidden mb-4 bg-black">
@@ -44,23 +53,23 @@ export default function StudentCourseDetailPage() {
                 </div>
               ) : null}
               {activeLesson.content && (
-                <div className="prose prose-invert max-w-none text-[#e0e0f0] whitespace-pre-wrap">
+                <div className="prose prose-invert max-w-none text-[var(--text-primary)] whitespace-pre-wrap">
                   {activeLesson.content}
                 </div>
               )}
             </motion.div>
           ) : (
-            <div className="glass rounded-2xl p-6 text-center text-[#8888aa]">
+            <div className="card p-6 text-center text-[var(--text-secondary)]">
               Select a lesson to start learning
             </div>
           )}
         </div>
 
-        <div className="glass rounded-2xl p-4">
+        <div className="card p-4">
           <h3 className="font-semibold mb-3">Lessons ({course.lessons?.length || 0})</h3>
           <div className="space-y-1">
             {(!course.lessons || course.lessons.length === 0) && (
-              <p className="text-sm text-[#8888aa]">No lessons yet.</p>
+              <p className="text-sm text-[var(--text-secondary)]">No lessons yet.</p>
             )}
             {course.lessons?.sort((a: any, b: any) => a.order - b.order).map((lesson: any) => (
               <button key={lesson.id} onClick={() => setActiveLesson(lesson)}
@@ -71,7 +80,7 @@ export default function StudentCourseDetailPage() {
                   <span className="text-xs text-cyan-400">#{lesson.order}</span>
                   <div>
                     <p className="font-medium">{lesson.title}</p>
-                    <p className="text-xs text-[#555]">{lesson.type === "VIDEO" ? "📹" : "📝"}</p>
+                    <p className="text-xs text-[var(--text-muted)]">{lesson.type === "VIDEO" ? "Video" : "Text"}</p>
                   </div>
                 </div>
               </button>
@@ -86,7 +95,7 @@ export default function StudentCourseDetailPage() {
                   <a key={quiz.id} href={`/student/quiz/${quiz.id}`}
                     className="block p-3 rounded-xl text-sm hover:bg-white/5 transition-all">
                     <p className="font-medium">{quiz.title}</p>
-                    <p className="text-xs text-[#555]">{quiz.questions?.length || 0} questions{quiz.timeLimit ? ` · ${quiz.timeLimit}min` : ""}</p>
+                    <p className="text-xs text-[var(--text-muted)]">{quiz.questions?.length || 0} questions{quiz.timeLimit ? ` · ${quiz.timeLimit}min` : ""}</p>
                   </a>
                 ))}
               </div>

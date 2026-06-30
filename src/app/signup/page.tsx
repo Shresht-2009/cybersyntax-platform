@@ -62,96 +62,106 @@ function SignupForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/20 rounded-full blur-[120px]" />
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-[var(--bg-primary)]">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[var(--accent-purple)]/10 rounded-full blur-[140px] animate-pulse-glow" />
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         className="relative z-10 w-full max-w-md mx-4"
       >
-        <div className="glass rounded-2xl p-8 cyber-glow">
+        <div className="card p-8 shadow-[var(--shadow-glow-purple)]">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold cyber-text-gradient mb-2">Join CyberSyntax</h1>
-            <p className="text-[#8888aa] text-sm">Create your account and start your journey</p>
+            <h1 className="text-3xl font-bold text-gradient mb-2">Join CyberSyntax</h1>
+            <p className="text-sm text-[var(--text-secondary)]">Create your account and start your journey</p>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+            <div className="mb-5 badge-red w-full justify-center py-2.5 px-4 rounded-lg text-sm">
               {error}
             </div>
           )}
 
           {step === 1 && (
-            <div className="space-y-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="space-y-4"
+            >
               <button
                 onClick={() => selectRole("STUDENT")}
-                className="glass w-full p-5 rounded-xl text-left glass-hover group"
+                className="card w-full p-5 text-left hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-11 h-11 rounded-xl bg-[var(--accent-cyan)]/10 flex items-center justify-center ring-1 ring-[var(--accent-cyan)]/20 shrink-0">
+                    <svg className="w-5 h-5 text-[var(--accent-cyan)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 7l-9-5 9-5 9 5-9 5z" />
                     </svg>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-lg">Student</h3>
-                    <p className="text-sm text-[#8888aa]">Join courses, learn from mentors</p>
+                  <div className="text-left">
+                    <h3 className="font-semibold text-[var(--text-primary)]">Student</h3>
+                    <p className="text-sm text-[var(--text-secondary)] mt-0.5">Join courses, learn from mentors</p>
                   </div>
                 </div>
               </button>
               <button
                 onClick={() => selectRole("MENTOR")}
-                className="glass w-full p-5 rounded-xl text-left glass-hover group"
+                className="card w-full p-5 text-left hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-11 h-11 rounded-xl bg-[var(--accent-purple)]/10 flex items-center justify-center ring-1 ring-[var(--accent-purple)]/20 shrink-0">
+                    <svg className="w-5 h-5 text-[var(--accent-purple)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                     </svg>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-lg">Mentor</h3>
-                    <p className="text-sm text-[#8888aa]">Teach, guide, and earn</p>
+                  <div className="text-left">
+                    <h3 className="font-semibold text-[var(--text-primary)]">Mentor</h3>
+                    <p className="text-sm text-[var(--text-secondary)] mt-0.5">Teach, guide, and earn</p>
                   </div>
                 </div>
               </button>
-            </div>
+            </motion.div>
           )}
 
           {step === 2 && (
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <motion.form
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              onSubmit={handleSubmit}
+              className="space-y-5"
+            >
               <div>
-                <label className="block text-sm text-[#8888aa] mb-1">Full Name</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-1.5 font-medium">Full Name</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="cyber-input w-full px-4 py-2.5 rounded-lg"
+                  className="input"
                   placeholder="John Doe"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm text-[#8888aa] mb-1">Email</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-1.5 font-medium">Email</label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="cyber-input w-full px-4 py-2.5 rounded-lg"
+                  className="input"
                   placeholder="you@example.com"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm text-[#8888aa] mb-1">Password</label>
+                <label className="block text-sm text-[var(--text-secondary)] mb-1.5 font-medium">Password</label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="cyber-input w-full px-4 py-2.5 rounded-lg"
+                  className="input"
                   placeholder="Min 8 characters"
                   required
                   minLength={8}
@@ -159,12 +169,12 @@ function SignupForm() {
               </div>
               {role === "MENTOR" && (
                 <div>
-                  <label className="block text-sm text-[#8888aa] mb-1">Educator Key</label>
+                  <label className="block text-sm text-[var(--text-secondary)] mb-1.5 font-medium">Educator Key</label>
                   <input
                     type="password"
                     value={educatorKey}
                     onChange={(e) => setEducatorKey(e.target.value)}
-                    className="cyber-input w-full px-4 py-2.5 rounded-lg"
+                    className="input"
                     placeholder="Enter educator key"
                     required
                   />
@@ -173,23 +183,23 @@ function SignupForm() {
               <button
                 type="submit"
                 disabled={loading}
-                className="cyber-btn w-full py-2.5 rounded-lg text-base disabled:opacity-50"
+                className="btn-primary w-full justify-center py-2.5 rounded-lg text-base"
               >
                 {loading ? "Creating account..." : "Create Account"}
               </button>
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="w-full text-sm text-[#8888aa] hover:text-cyan-400 transition-colors"
+                className="btn-ghost w-full justify-center text-sm"
               >
                 ← Change role
               </button>
-            </form>
+            </motion.form>
           )}
 
-          <p className="text-center mt-6 text-sm text-[#8888aa]">
+          <p className="text-center mt-6 text-sm text-[var(--text-secondary)]">
             Already have an account?{" "}
-            <Link href="/login" className="text-cyan-400 hover:underline">
+            <Link href="/login" className="text-[var(--accent-cyan)] hover:underline font-medium">
               Sign in
             </Link>
           </p>
@@ -201,7 +211,7 @@ function SignupForm() {
 
 export default function SignupPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-[#8888aa]">Loading...</div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-[var(--text-secondary)]">Loading...</div>}>
       <SignupForm />
     </Suspense>
   );

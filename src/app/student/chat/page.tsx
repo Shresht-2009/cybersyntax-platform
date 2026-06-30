@@ -68,8 +68,8 @@ export default function StudentChatPage() {
 
   return (
     <div className="flex h-[calc(100vh-8rem)] gap-4">
-      <div className="w-80 glass rounded-2xl overflow-hidden flex flex-col shrink-0">
-        <div className="p-4 border-b border-[var(--cyber-border)]">
+      <div className="w-80 card overflow-hidden flex flex-col shrink-0">
+        <div className="p-4 border-b border-[var(--border-primary)]">
           <h2 className="font-semibold">Chats</h2>
         </div>
         <div className="flex-1 overflow-y-auto p-2 space-y-1">
@@ -79,17 +79,17 @@ export default function StudentChatPage() {
                 activeConv?.id === conv.id ? "bg-cyan-500/10 border border-cyan-500/20" : "hover:bg-white/5"
               }`}>
               <p className="font-medium truncate">{conv.mentor?.name || "Mentor"}</p>
-              <p className="text-xs text-[#8888aa] truncate">{conv.mentor?.email}</p>
+              <p className="text-xs text-[var(--text-secondary)] truncate">{conv.mentor?.email}</p>
             </button>
           ))}
-          {conversations.length === 0 && <p className="text-xs text-[#8888aa] text-center p-4">No conversations yet. Your mentor will reach out.</p>}
+          {conversations.length === 0 && <p className="text-xs text-[var(--text-secondary)] text-center p-4">No conversations yet. Your mentor will reach out.</p>}
         </div>
       </div>
 
-      <div className="flex-1 glass rounded-2xl flex flex-col overflow-hidden">
+      <div className="flex-1 card flex flex-col overflow-hidden">
         {activeConv ? (
           <>
-            <div className="p-4 border-b border-[var(--cyber-border)]">
+            <div className="p-4 border-b border-[var(--border-primary)]">
               <h3 className="font-semibold">{activeConv.mentor?.name || "Mentor"}</h3>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
@@ -107,17 +107,17 @@ export default function StudentChatPage() {
               ))}
               <div ref={messagesEndRef} />
             </div>
-            <div className="p-4 border-t border-[var(--cyber-border)]">
+            <div className="p-4 border-t border-[var(--border-primary)]">
               <div className="flex gap-2">
                 <input type="text" value={text} onChange={(e) => setText(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                  className="cyber-input flex-1 px-4 py-2.5 rounded-lg" placeholder="Type a message..." />
-                <button onClick={sendMessage} className="cyber-btn px-4 py-2.5 rounded-lg">Send</button>
+                  className="input flex-1" placeholder="Type a message..." />
+                <button onClick={sendMessage} className="btn-primary">Send</button>
               </div>
             </div>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-[#8888aa]">
+          <div className="flex-1 flex items-center justify-center text-[var(--text-secondary)]">
             Select a conversation to start chatting
           </div>
         )}

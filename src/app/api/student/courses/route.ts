@@ -8,6 +8,7 @@ export async function GET() {
   if (!user || user.role !== "STUDENT") return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const courses = await prisma.course.findMany({
+    where: { status: "PUBLISHED" },
     include: { lessons: { orderBy: { order: "asc" } }, quizzes: { include: { questions: true } } },
     orderBy: { createdAt: "desc" },
   });

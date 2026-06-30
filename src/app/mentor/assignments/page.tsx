@@ -39,26 +39,26 @@ export default function AssignmentsPage() {
 
   return (
     <div className="space-y-8">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="page-header flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-3xl font-bold cyber-text-gradient mb-2">Assignments</h1>
-          <p className="text-[#8888aa]">Create and manage assignments for your students.</p>
+          <h1 className="text-3xl font-bold text-gradient mb-2">Assignments</h1>
+          <p style={{ color: 'var(--text-secondary)' }}>Create and manage assignments for your students.</p>
         </div>
-        <button onClick={() => setShowForm(!showForm)} className="cyber-btn px-4 py-2 rounded-lg text-sm">
+        <button onClick={() => setShowForm(!showForm)} className="btn-primary px-4 py-2 text-sm">
           {showForm ? "Cancel" : "+ New Assignment"}
         </button>
       </motion.div>
 
       {showForm && (
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-2xl p-6">
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="card p-6">
           <form onSubmit={handleCreate} className="space-y-4">
-            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="cyber-input w-full px-4 py-2.5 rounded-lg" placeholder="Assignment title" required />
-            <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="cyber-input w-full px-4 py-2.5 rounded-lg min-h-[100px] resize-y" placeholder="Description..." required />
+            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="input w-full" placeholder="Assignment title" required />
+            <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="textarea w-full min-h-[100px]" placeholder="Description..." required />
             <div>
-              <label className="block text-sm text-[#8888aa] mb-1">Due Date (optional)</label>
-              <input type="datetime-local" value={dueDate} onChange={(e) => setDueDate(e.target.value)} className="cyber-input w-full px-4 py-2.5 rounded-lg" />
+              <label className="block text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>Due Date (optional)</label>
+              <input type="datetime-local" value={dueDate} onChange={(e) => setDueDate(e.target.value)} className="input w-full" />
             </div>
-            <button type="submit" disabled={loading} className="cyber-btn px-6 py-2.5 rounded-lg">
+            <button type="submit" disabled={loading} className="btn-primary px-6 py-2.5">
               {loading ? "Creating..." : "Create Assignment"}
             </button>
           </form>
@@ -66,16 +66,24 @@ export default function AssignmentsPage() {
       )}
 
       {assignments.length === 0 ? (
-        <div className="text-center py-12 text-[#8888aa]">No assignments yet.</div>
+        <div className="empty-state">
+          <div className="empty-state-icon">
+            <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </div>
+          <h3 className="empty-state-title">No assignments yet</h3>
+          <p className="empty-state-desc">Create your first assignment to get started.</p>
+        </div>
       ) : (
         <div className="space-y-4">
           {assignments.map((a, i) => (
-            <motion.div key={a.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }} className="glass rounded-xl p-5">
+            <motion.div key={a.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }} className="card p-5">
               <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold">{a.title}</h3>
-                  <p className="text-sm text-[#8888aa] mt-1">{a.description}</p>
-                  <div className="flex gap-4 mt-2 text-xs text-[#555]">
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>{a.title}</h3>
+                  <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>{a.description}</p>
+                  <div className="flex gap-4 mt-2 text-xs" style={{ color: 'var(--text-muted)' }}>
                     {a.dueDate && <span>Due: {new Date(a.dueDate).toLocaleDateString()}</span>}
                     <span>{a.submissions?.length || 0} submissions</span>
                   </div>
@@ -83,11 +91,12 @@ export default function AssignmentsPage() {
               </div>
               {a.submissions && a.submissions.length > 0 && (
                 <div className="mt-4 space-y-2">
+                  <div className="divider" />
                   {a.submissions.map((sub: any) => (
-                    <div key={sub.id} className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-                      <span className="text-sm">{sub.student?.user?.name}</span>
+                    <div key={sub.id} className="flex items-center justify-between p-2 rounded-lg" style={{ background: 'var(--bg-secondary)' }}>
+                      <span className="text-sm" style={{ color: 'var(--text-primary)' }}>{sub.student?.user?.name}</span>
                       <div className="flex items-center gap-2">
-                        <span className={`text-xs px-2 py-0.5 rounded-full ${sub.status === "GRADED" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"}`}>
+                        <span className={`badge ${sub.status === "GRADED" ? "badge-green" : "badge-yellow"}`}>
                           {sub.grade ? `${sub.grade}/100` : "Ungraded"}
                         </span>
                       </div>

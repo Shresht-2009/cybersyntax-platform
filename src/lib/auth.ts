@@ -42,6 +42,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         token.id = user.id;
         token.role = (user as any).role;
+        if ((user as any).role === "STUDENT") {
+          const profile = await prisma.studentProfile.findUnique({ where: { userId: user.id }, select: { status: true } });
+          token.studentStatus = profile?.status || "DRAFT";
+        }
+      } else if (token.role === "STUDENT") {
+        const profile = await prisma.studentProfile.findUnique({ where: { userId: token.id as string }, select: { status: true } });
+        token.studentStatus = profile?.status || "DRAFT";
       }
       return token;
     },

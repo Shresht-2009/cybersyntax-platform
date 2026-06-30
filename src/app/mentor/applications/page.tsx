@@ -32,34 +32,34 @@ export default function ApplicationsPage() {
 
   return (
     <div className="space-y-8">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-3xl font-bold cyber-text-gradient mb-2">Applications</h1>
-        <p className="text-[#8888aa]">Review and manage student applications.</p>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="page-header">
+        <h1 className="text-3xl font-bold text-gradient mb-2">Applications</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Review and manage student applications ({pending.length} pending).</p>
       </motion.div>
 
       {pending.length > 0 && (
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Pending Review ({pending.length})</h2>
+          <h2 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>Pending Review ({pending.length})</h2>
           {pending.map((app, i) => (
             <motion.div
               key={app.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="glass rounded-2xl p-6"
+              className="card p-6"
             >
-                  <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold">{app.user?.name}</h3>
-                  <p className="text-sm text-[#8888aa]">{app.user?.email}</p>
-                  <p className="text-sm text-cyan-400 mt-1">Program: {app.program || "Not specified"}</p>
+              <div className="flex items-start justify-between flex-wrap gap-4">
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>{app.user?.name}</h3>
+                  <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{app.user?.email}</p>
+                  <p className="text-sm mt-1" style={{ color: 'var(--accent-cyan)' }}>Program: {app.program || "Not specified"}</p>
                   {app.resume && (
-                    <p className="text-sm text-[#8888aa] mt-1">
+                    <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
                       Resume:{" "}
                       {app.resumeType === "TEXT" ? (
-                        <span className="text-cyan-400">Written application available</span>
+                        <span style={{ color: 'var(--accent-cyan)' }}>Written application available</span>
                       ) : (
-                        <a href={app.resume} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">
+                        <a href={app.resume} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-cyan)' }}>
                           View file
                         </a>
                       )}
@@ -67,25 +67,24 @@ export default function ApplicationsPage() {
                   )}
                   {app.diagnostic && (
                     <button onClick={() => setSelectedDiag(app.diagnostic)}
-                      className="text-xs text-purple-400 hover:underline mt-1">
+                      className="text-xs mt-1" style={{ color: 'var(--accent-purple)' }}>
                       View diagnostic answers
                     </button>
                   )}
                 </div>
-                <span className="px-3 py-1 rounded-full text-xs bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
-                  Pending
-                </span>
+                <span className="badge badge-yellow">Pending</span>
               </div>
               <div className="flex gap-3 mt-4">
                 <button
                   onClick={() => handleAction(app.id, "ACCEPTED")}
-                  className="cyber-btn px-4 py-2 rounded-lg text-sm"
+                  className="btn-primary px-4 py-2 text-sm"
+                  style={{ background: 'var(--accent-green)' }}
                 >
                   Accept
                 </button>
                 <button
                   onClick={() => handleAction(app.id, "REJECTED")}
-                  className="px-4 py-2 rounded-lg text-sm border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-all"
+                  className="btn-danger px-4 py-2 text-sm"
                 >
                   Reject
                 </button>
@@ -96,27 +95,29 @@ export default function ApplicationsPage() {
       )}
 
       {pending.length === 0 && (
-        <div className="text-center py-12 text-[#8888aa]">No pending applications.</div>
+        <div className="empty-state">
+          <div className="empty-state-icon">
+            <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <h3 className="empty-state-title">No pending applications</h3>
+          <p className="empty-state-desc">All applications have been reviewed.</p>
+        </div>
       )}
 
       {reviewed.length > 0 && (
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Reviewed</h2>
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>Reviewed</h2>
           <div className="space-y-3">
             {reviewed.map((app) => (
-              <div key={app.id} className="glass rounded-xl p-4 flex items-center justify-between">
+              <div key={app.id} className="card p-4 flex items-center justify-between">
                 <div>
-                  <p className="font-medium">{app.user?.name}</p>
-                  <p className="text-sm text-[#8888aa]">{app.user?.email}</p>
-                  <p className="text-xs text-[#666]">{app.program || "No program"}</p>
+                  <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{app.user?.name}</p>
+                  <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{app.user?.email}</p>
+                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{app.program || "No program"}</p>
                 </div>
-                <span
-                  className={`px-3 py-1 rounded-full text-xs border ${
-                    app.status === "ACCEPTED"
-                      ? "bg-green-500/10 text-green-400 border-green-500/20"
-                      : "bg-red-500/10 text-red-400 border-red-500/20"
-                  }`}
-                >
+                <span className={`badge ${app.status === "ACCEPTED" ? "badge-green" : "badge-red"}`}>
                   {app.status}
                 </span>
               </div>
@@ -126,17 +127,17 @@ export default function ApplicationsPage() {
       )}
 
       {selectedDiag && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setSelectedDiag(null)}>
-          <div className="glass rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">Diagnostic Answers</h3>
-              <button onClick={() => setSelectedDiag(null)} className="text-[#8888aa] hover:text-white">✕</button>
+        <div className="modal-overlay" onClick={() => setSelectedDiag(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Diagnostic Answers</h3>
+              <button onClick={() => setSelectedDiag(null)} style={{ color: 'var(--text-secondary)' }}>✕</button>
             </div>
             <div className="space-y-3">
               {Object.entries(selectedDiag).map(([key, val]) => (
                 <div key={key}>
-                  <p className="text-xs text-cyan-400 uppercase tracking-wide">{key.replace(/([A-Z])/g, " $1")}</p>
-                  <p className="text-sm text-white/80">{String(val) || "Not answered"}</p>
+                  <p className="text-xs uppercase tracking-wide" style={{ color: 'var(--accent-cyan)' }}>{key.replace(/([A-Z])/g, " $1")}</p>
+                  <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{String(val) || "Not answered"}</p>
                 </div>
               ))}
             </div>

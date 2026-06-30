@@ -68,38 +68,40 @@ export default function MentorChatPage() {
 
   return (
     <div className="flex h-[calc(100vh-8rem)] gap-4">
-      <div className="w-80 glass rounded-2xl overflow-hidden flex flex-col shrink-0">
-        <div className="p-4 border-b border-[var(--cyber-border)]">
-          <h2 className="font-semibold">Conversations</h2>
+      <div className="w-80 card overflow-hidden flex flex-col shrink-0 rounded-2xl">
+        <div className="p-4 border-b border-[var(--border-primary)]">
+          <h2 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Conversations</h2>
         </div>
         <div className="flex-1 overflow-y-auto p-2 space-y-1">
           {conversations.map((conv) => (
             <button key={conv.id} onClick={() => setActiveConv(conv)}
               className={`w-full p-3 rounded-xl text-left text-sm transition-all ${
-                activeConv?.id === conv.id ? "bg-cyan-500/10 border border-cyan-500/20" : "hover:bg-white/5"
-              }`}>
-              <p className="font-medium truncate">{conv.student?.name || "Student"}</p>
-              <p className="text-xs text-[#8888aa] truncate">{conv.student?.email}</p>
+                activeConv?.id === conv.id ? "nav-link active" : "hover:bg-[var(--bg-secondary)]"
+              }`}
+              style={activeConv?.id !== conv.id ? { color: 'var(--text-secondary)' } : {}}>
+              <p className="font-medium truncate" style={{ color: 'var(--text-primary)' }}>{conv.student?.name || "Student"}</p>
+              <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>{conv.student?.email}</p>
             </button>
           ))}
-          {conversations.length === 0 && <p className="text-xs text-[#8888aa] text-center p-4">No conversations yet</p>}
+          {conversations.length === 0 && <p className="text-xs text-center p-4" style={{ color: 'var(--text-muted)' }}>No conversations yet</p>}
         </div>
       </div>
 
-      <div className="flex-1 glass rounded-2xl flex flex-col overflow-hidden">
+      <div className="flex-1 card rounded-2xl flex flex-col overflow-hidden">
         {activeConv ? (
           <>
-            <div className="p-4 border-b border-[var(--cyber-border)]">
-              <h3 className="font-semibold">{activeConv.student?.name}</h3>
+            <div className="p-4 border-b border-[var(--border-primary)]">
+              <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>{activeConv.student?.name}</h3>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {messages.map((msg) => (
                 <div key={msg.id} className={`flex ${msg.senderId === userId ? "justify-end" : "justify-start"}`}>
                   <div className={`max-w-[70%] p-3 rounded-2xl text-sm ${
-                    msg.senderId === userId ? "bg-cyan-500/20 text-cyan-100" : "bg-white/10"
-                  }`}>
+                    msg.senderId === userId ? "bg-cyan-500/20" : "bg-[var(--bg-secondary)]"
+                  }`}
+                    style={msg.senderId === userId ? { color: 'var(--text-primary)' } : { color: 'var(--text-primary)' }}>
                     <p>{msg.content}</p>
-                    <p className="text-[10px] opacity-50 mt-1">
+                    <p className="text-[10px] opacity-50 mt-1" style={{ color: 'var(--text-muted)' }}>
                       {new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </p>
                   </div>
@@ -107,17 +109,17 @@ export default function MentorChatPage() {
               ))}
               <div ref={messagesEndRef} />
             </div>
-            <div className="p-4 border-t border-[var(--cyber-border)]">
+            <div className="p-4 border-t border-[var(--border-primary)]">
               <div className="flex gap-2">
                 <input type="text" value={text} onChange={(e) => setText(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                  className="cyber-input flex-1 px-4 py-2.5 rounded-lg" placeholder="Type a message..." />
-                <button onClick={sendMessage} className="cyber-btn px-4 py-2.5 rounded-lg">Send</button>
+                  className="input flex-1" placeholder="Type a message..." />
+                <button onClick={sendMessage} className="btn-primary px-4 py-2.5">Send</button>
               </div>
             </div>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-[#8888aa]">
+          <div className="flex-1 flex items-center justify-center" style={{ color: 'var(--text-muted)' }}>
             Select a conversation to start chatting
           </div>
         )}

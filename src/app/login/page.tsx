@@ -42,47 +42,48 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500/20 rounded-full blur-[120px]" />
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-[var(--bg-primary)]">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[var(--accent-cyan)]/10 rounded-full blur-[140px] animate-pulse-glow" />
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         className="relative z-10 w-full max-w-md mx-4"
       >
-        <div className="glass rounded-2xl p-8 cyber-glow">
+        <div className="card p-8 shadow-[var(--shadow-glow-cyan)]">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold cyber-text-gradient mb-2">Welcome Back</h1>
-            <p className="text-[#8888aa] text-sm">Sign in to your CyberSyntax account</p>
+            <h1 className="text-3xl font-bold text-gradient mb-2">Welcome Back</h1>
+            <p className="text-sm text-[var(--text-secondary)]">Sign in to your CyberSyntax account</p>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+            <div className="mb-5 badge-red w-full justify-center py-2.5 px-4 rounded-lg text-sm">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm text-[#8888aa] mb-1">Email</label>
+              <label className="block text-sm text-[var(--text-secondary)] mb-1.5 font-medium">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="cyber-input w-full px-4 py-2.5 rounded-lg"
+                className="input"
                 placeholder="you@example.com"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm text-[#8888aa] mb-1">Password</label>
+              <label className="block text-sm text-[var(--text-secondary)] mb-1.5 font-medium">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="cyber-input w-full px-4 py-2.5 rounded-lg"
+                className="input"
                 placeholder="••••••••"
                 required
               />
@@ -90,15 +91,15 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="cyber-btn w-full py-2.5 rounded-lg text-base disabled:opacity-50"
+              className="btn-primary w-full justify-center py-2.5 rounded-lg text-base"
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
 
-          <p className="text-center mt-6 text-sm text-[#8888aa]">
+          <p className="text-center mt-6 text-sm text-[var(--text-secondary)]">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="text-cyan-400 hover:underline">
+            <Link href="/signup" className="text-[var(--accent-cyan)] hover:underline font-medium">
               Sign up
             </Link>
           </p>
