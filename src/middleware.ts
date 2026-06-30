@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { auth } from "@/lib/auth";
+import { decode } from "next-auth/jwt";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -12,32 +12,52 @@ export async function middleware(request: NextRequest) {
 
   if (isPublic) return NextResponse.next();
 
-  const session = await auth();
-  const user = session?.user as any;
+  const isSecure = request.nextUrl.protocol === "https:";
+  const cookieName = isSecure ? "__Secure-authjs.session-token" : "authjs.session-token";
 
-  if (!user) {
+  const token = request.cookies.get(cookieName)?.value ?? request.cookies.get("authjs.session-token")?.value;
+
+  if (!token) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  if (pathname.startsWith("/mentor") && user.role !== "MENTOR") {
-    return NextResponse.redirect(new URL("/student/dashboard", request.url));
-  }
+  const secret = process.env.NEXTAUTH_SECRET;
+  if (!secret) return NextResponse.next();
 
-  if (pathname.startsWith("/student") && user.role !== "STUDENT") {
-    return NextResponse.redirect(new URL("/mentor/dashboard", request.url));
-  }
+  try {
+    const decoded = await decode({ token, secret, salt: cookieName });
+    const user = decoded as any;
 
-  if (pathname.startsWith("/api/mentor") && user.role !== "MENTOR") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+    if (!user) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
 
-  if (pathname.startsWith("/api/student") && user.role !== "STUDENT") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+    if (pathname.startsWith("/mentor") && user.role !== "MENTOR") {
+      return NextResponse.redirect(new URL("/student/dashboard", request.url));
+    }
 
-  return NextResponse.next();
+    if (pathname.startsWith("/student") && user.role !== "STUDENT") {
+      return NextResponse.redirect(new URL("/mentor/dashboard", request.url));
+    }
+
+    if (pathname.startsWith("/api/mentor") && user.role !== "MENTOR") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    if (pathname.startsWith("/api/student") && user.role !== "STUDENT") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    return NextResponse.next();
+  } catch {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
 }
 
 export const config = {
