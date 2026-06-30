@@ -12,7 +12,6 @@ const navItems = [
   { href: "/mentor/applications", label: "Applications", icon: AppIcon },
   { href: "/mentor/students", label: "Students", icon: StudentsIcon },
   { href: "/mentor/courses", label: "Courses", icon: CourseIcon },
-  { href: "/mentor/quizzes", label: "Quizzes", icon: QuizIcon },
   { href: "/mentor/assignments", label: "Assignments", icon: AssignIcon },
   { href: "/mentor/chat", label: "Chat", icon: ChatIcon },
   { href: "/mentor/finance", label: "Finance", icon: FinanceIcon },

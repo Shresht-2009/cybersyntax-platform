@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { IconXCircle } from "@/components/shared/Icons";
 
 export default function ApplicationsPage() {
   const [applications, setApplications] = useState<any[]>([]);
@@ -131,7 +132,7 @@ export default function ApplicationsPage() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Diagnostic Answers</h3>
-              <button onClick={() => setSelectedDiag(null)} style={{ color: 'var(--text-secondary)' }}>✕</button>
+              <button onClick={() => setSelectedDiag(null)} style={{ color: 'var(--text-secondary)' }}><IconXCircle className="w-5 h-5" /></button>
             </div>
             <div className="space-y-3">
               {Object.entries(selectedDiag).map(([key, val]) => (

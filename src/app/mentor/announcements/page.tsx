@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useUploadThing } from "@/lib/uploadthing";
+import { IconCheckCircle, IconXCircle } from "@/components/shared/Icons";
 
 export default function AnnouncementsPage() {
   const [announcements, setAnnouncements] = useState<any[]>([]);
@@ -84,17 +85,17 @@ export default function AnnouncementsPage() {
               <button type="button" onClick={() => imageInputRef.current?.click()}
                 className={`flex-1 py-2.5 rounded-lg text-sm transition-all ${mediaType === "image" ? "btn-primary" : "bg-[var(--bg-secondary)]"}`}
                 style={mediaType !== "image" ? { color: 'var(--text-secondary)' } : {}}>
-                {isImageUploading ? "Uploading..." : imageUrl ? "Image Added ✓" : "Add Image"}
+                {isImageUploading ? "Uploading..." : imageUrl ? <>Image Added <IconCheckCircle className="w-4 h-4 inline-block" /></> : "Add Image"}
               </button>
               <button type="button" onClick={() => videoInputRef.current?.click()}
                 className={`flex-1 py-2.5 rounded-lg text-sm transition-all ${mediaType === "video" ? "btn-primary" : "bg-[var(--bg-secondary)]"}`}
                 style={mediaType !== "video" ? { color: 'var(--text-secondary)' } : {}}>
-                {isVideoUploading ? "Uploading..." : videoUrl ? "Video Added ✓" : "Add Video"}
+                {isVideoUploading ? "Uploading..." : videoUrl ? <>Video Added <IconCheckCircle className="w-4 h-4 inline-block" /></> : "Add Video"}
               </button>
               {mediaType !== "none" && (
                 <button type="button" onClick={() => { setImageUrl(""); setVideoUrl(""); setMediaType("none"); }}
                   className="px-3 py-2.5 rounded-lg text-sm" style={{ color: 'var(--accent-red)' }}>
-                  ✕
+                  <IconXCircle className="w-5 h-5" />
                 </button>
               )}
             </div>

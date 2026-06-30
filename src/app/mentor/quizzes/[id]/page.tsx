@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
+import { IconCheckCircle } from "@/components/shared/Icons";
 
 export default function QuizDetailPage() {
   const { id } = useParams();
@@ -146,7 +147,7 @@ export default function QuizDetailPage() {
                     {q.options.map((o: string, j: number) => (
                       <span key={j} className={`text-xs px-2 py-1 rounded ${o === q.correctAnswer ? "badge-green" : ""}`}
                         style={o !== q.correctAnswer ? { background: 'var(--bg-secondary)', color: 'var(--text-secondary)' } : {}}>
-                        {o} {o === q.correctAnswer ? "✓" : ""}
+                        {o} {o === q.correctAnswer ? <IconCheckCircle className="w-3 h-3 inline-block" /> : ""}
                       </span>
                     ))}
                   </div>
