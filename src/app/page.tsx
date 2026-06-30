@@ -280,90 +280,19 @@ function ScrollSubjectShowcase() {
     offset: ["start start", "end end"],
   });
 
-  const opacities = [
-    useTransform(scrollYProgress, [0, 0.25, 0.38], [1, 1, 0]),
-    useTransform(scrollYProgress, [0.25, 0.38, 0.58, 0.71], [0, 1, 1, 0]),
-    useTransform(scrollYProgress, [0.58, 0.71, 1], [0, 1, 1]),
-  ];
-
   const subjectIndexMotion = useTransform(scrollYProgress, [0, 0.33, 0.66, 1], [0, 0, 1, 2]);
   const [activeIndex, setActiveIndex] = useState(0);
   useMotionValueEvent(subjectIndexMotion, "change", (v) => setActiveIndex(Math.round(v)));
 
-  const localProgress = useTransform(
-    scrollYProgress,
-    [0, 0.33, 0.66, 1],
-    [0, 1, 0, 1],
-  );
-
-  const [localP, setLocalP] = useState(0);
-  useMotionValueEvent(localProgress, "change", (v) => setLocalP(v));
-
   return (
     <div ref={containerRef} className="relative" style={{ height: '300vh' }}>
       <div className="sticky top-0 h-screen overflow-hidden flex items-center" style={{ background: 'var(--bg-deep)' }}>
-        {/* Background layers — crossfade by scroll */}
-        <div className="absolute inset-0 pointer-events-none">
-          <ScrollCybersecBg scrollYProgress={scrollYProgress} opacity={opacities[0]} active={activeIndex === 0} />
-          <ScrollDataScienceBg scrollYProgress={scrollYProgress} opacity={opacities[1]} active={activeIndex === 1} />
-          <ScrollFinanceBg scrollYProgress={scrollYProgress} opacity={opacities[2]} active={activeIndex === 2} />
-        </div>
-
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 py-10">
-          {subjects.map((s, i) => (
-            <motion.div
-              key={s.id}
-              style={{ opacity: opacities[i] }}
-              className={`flex flex-col ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-12 md:gap-20 ${i !== 0 ? "absolute inset-0 px-6 md:px-12 py-10 pointer-events-none" : ""}`}
-            >
-              <div className="flex-1 text-left">
-                <h2 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-[1.05]"
-                  style={{ background: `linear-gradient(135deg, ${s.color}, var(--text-primary) 70%)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                  {s.title}
-                </h2>
-                <div className="space-y-5 mb-8">
-                  {s.paragraphs.map((p, pi) => (
-                    <motion.p
-                      key={pi}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ type: "spring", stiffness: 40, damping: 12, delay: pi * 0.1 }}
-                      className="text-lg md:text-xl leading-relaxed max-w-xl" style={{ color: 'var(--text-secondary)' }}
-                    >
-                      {p}
-                    </motion.p>
-                  ))}
-                </div>
-                <Link href={s.cta}
-                  className="btn-primary px-10 py-4 rounded-xl text-lg font-semibold relative group overflow-hidden ripple-btn inline-block"
-                  style={s.btnStyle as React.CSSProperties}
-                >
-                  <span className="relative z-10">Explore {s.title}</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/8 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                </Link>
-              </div>
-
-              <div className="flex-1 flex items-center justify-center">
-                <motion.div
-                  className="w-64 h-64 md:w-80 md:h-80 rounded-[2rem] flex items-center justify-center"
-                  style={{
-                    background: `linear-gradient(135deg, ${s.color}10, ${s.color}04)`,
-                    border: `1px solid ${s.borderColor}`,
-                    boxShadow: `0 0 80px ${s.color}08`,
-                  }}
-                >
-                  {s.id === 0 && <ShieldIcon size={160} color={s.color} />}
-                  {s.id === 1 && <ChartIcon size={160} color={s.color} />}
-                  {s.id === 2 && <GraphIcon size={160} color={s.color} />}
-                </motion.div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        {subjects.map((s, i) => (
+          <ScrollRevealSection key={s.id} subject={s} index={i} scrollYProgress={scrollYProgress} />
+        ))}
 
         {/* Progress dots */}
-        <div className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-20">
+        <div className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-30">
           {[0, 1, 2].map((i) => (
             <motion.div
               key={i}
@@ -382,110 +311,224 @@ function ScrollSubjectShowcase() {
   );
 }
 
-/* ── Scroll-driven background: Cybersecurity ── */
-function ScrollCybersecBg({ scrollYProgress, opacity, active }: { scrollYProgress: MotionValue<number>; opacity: MotionValue<number>; active: boolean }) {
-  const hexRotations = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) =>
-    useTransform(scrollYProgress, [i * 0.03, 0.33 + i * 0.02], [0, 360]),
-  );
+/* ── Scroll reveal section for one subject ── */
+function ScrollRevealSection({ subject, index, scrollYProgress }: {
+  subject: typeof subjects[0]; index: number; scrollYProgress: MotionValue<number>;
+}) {
+  const start = index * 0.33;
+  const end = (index + 1) * 0.33;
+  const mid = (start + end) / 2;
+
+  // Local scroll progress within this subject's range [0, 1]
+  const localP = useTransform(scrollYProgress, [start, end], [0, 1]);
+
+  // Individual element reveals
+  const bgOpacity = useTransform(localP, [0, 0.06], [0, 0.5]);
+  const iconS = useTransform(localP, [0.04, 0.18], [0.3, 1]);
+  const iconO = useTransform(localP, [0.04, 0.12], [0, 1]);
+  const iconY = useTransform(localP, [0.04, 0.18], [40, 0]);
+  const titleO = useTransform(localP, [0.12, 0.25], [0, 1]);
+  const titleY2 = useTransform(localP, [0.12, 0.25], [30, 0]);
+  const bubbleO = useTransform(localP, [0.2, 0.35], [0, 1]);
+  const bubbleX2 = useTransform(localP, [0.2, 0.38], [60, 0]);
+  const ctaO = useTransform(localP, [0.32, 0.45], [0, 1]);
+
+  // Background motion values
+  const bgRotate = useTransform(localP, [0, 1], [0, 360]);
+  const dotO = useTransform(localP, [0, 0.1], [0, 1]);
+
   return (
-    <motion.div style={{ opacity }} className="absolute inset-0 pointer-events-none overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.025]">
-        <svg className="w-full h-full" viewBox="0 0 800 800">
-          <defs>
-            <pattern id="hxs" width="50" height="86.6" patternUnits="userSpaceOnUse">
-              <path d="M25 0L50 14.43V43.3L25 57.74L0 43.3V14.43Z" fill="none" stroke="var(--accent-emerald)" strokeWidth="0.3" />
-              <path d="M25 86.6L50 72.17V43.3L25 57.74L0 43.3V72.17Z" fill="none" stroke="var(--accent-emerald)" strokeWidth="0.3" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#hxs)" />
-        </svg>
-      </div>
-      {Array.from({ length: 12 }).map((_, i) => {
-        const x = 5 + (i % 4) * 25 + Math.random() * 5;
-        const y = 8 + Math.floor(i / 4) * 30 + Math.random() * 8;
-        return (
-          <motion.div key={i} className="absolute" style={{ left: `${x}%`, top: `${y}%` }}>
-            <motion.svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent-emerald)" strokeWidth="0.5" opacity="0.4" style={{ rotate: hexRotations[i] }}>
-              <path d="M12 2L20 7V17L12 22L4 17V7L12 2Z" />
-            </motion.svg>
+    <motion.div
+      style={{ opacity: useTransform(scrollYProgress, [start - 0.05, start + 0.02, end - 0.02, end + 0.05], [0, 1, 1, 0]) }}
+      className={`absolute inset-0 ${index !== 0 ? "pointer-events-none" : ""}`}
+    >
+      {/* Background layer */}
+      <div className="absolute inset-0 pointer-events-none">
+        {subject.id === 0 && (
+          <motion.div style={{ opacity: bgOpacity }} className="absolute inset-0">
+            <motion.div className="absolute inset-0 opacity-[0.025]" style={{ rotate: bgRotate }}>
+              <svg className="w-full h-full" viewBox="0 0 800 800">
+                <defs><pattern id={`hx-${index}`} width="50" height="86.6" patternUnits="userSpaceOnUse">
+                  <path d="M25 0L50 14.43V43.3L25 57.74L0 43.3V14.43Z" fill="none" stroke="var(--accent-emerald)" strokeWidth="0.3" />
+                  <path d="M25 86.6L50 72.17V43.3L25 57.74L0 43.3V72.17Z" fill="none" stroke="var(--accent-emerald)" strokeWidth="0.3" />
+                </pattern></defs>
+                <rect width="100%" height="100%" fill={`url(#hx-${index})`} />
+              </svg>
+            </motion.div>
+            {Array.from({ length: 10 }).map((_, i) => (
+              <motion.div
+                key={i} className="absolute"
+                style={{
+                  left: `${5 + (i % 5) * 20}%`, top: `${10 + Math.floor(i / 5) * 50}%`,
+                  opacity: useTransform(localP, [0.06 + i * 0.02, 0.14 + i * 0.02], [0, 0.5]),
+                  rotate: useTransform(localP, [0.06, 0.35], [0, 360 + i * 30]),
+                }}
+              >
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-emerald)" strokeWidth="0.5">
+                  <path d="M12 2L20 7V17L12 22L4 17V7L12 2Z" />
+                </svg>
+              </motion.div>
+            ))}
+            {Array.from({ length: 5 }).map((_, i) => (
+              <motion.div
+                key={`nd-${i}`} className="absolute w-2 h-2 rounded-full"
+                style={{
+                  left: `${10 + i * 18}%`, top: `${20 + (i % 2) * 50}%`,
+                  background: 'var(--accent-emerald)', boxShadow: '0 0 16px var(--accent-emerald)',
+                  scale: useTransform(localP, [0.1 + i * 0.03, 0.18 + i * 0.03], [0, 2]),
+                  opacity: useTransform(localP, [0.1 + i * 0.03, 0.16 + i * 0.03], [0, 0.35]),
+                }}
+              />
+            ))}
           </motion.div>
-        );
-      })}
-      {Array.from({ length: 6 }).map((_, i) => (
-        <motion.div key={`n-${i}`} className="absolute w-1.5 h-1.5 rounded-full" style={{
-          left: `${8 + i * 16}%`, top: `${15 + (i % 2) * 50}%`,
-          background: 'var(--accent-emerald)', boxShadow: '0 0 14px var(--accent-emerald)',
-        }} animate={{ scale: active ? [1, 2.5, 1] : 1, opacity: active ? [0.08, 0.3, 0.08] : 0.04 }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }} />
-      ))}
-    </motion.div>
-  );
-}
+        )}
 
-/* ── Scroll-driven background: Data Science ── */
-function ScrollDataScienceBg({ scrollYProgress, opacity, active }: { scrollYProgress: MotionValue<number>; opacity: MotionValue<number>; active: boolean }) {
-  const barHeights = Array.from({ length: 20 }, (_, i) =>
-    useTransform(scrollYProgress, [0.25, 0.66], [15 + i * 3, 80 + i * 8]),
-  );
-  return (
-    <motion.div style={{ opacity }} className="absolute inset-0 pointer-events-none overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.018]">
-        <svg className="w-full h-full" viewBox="0 0 1000 600">
-          <defs><pattern id="dtg" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="8" cy="8" r="1" fill="var(--accent-gold)" /></pattern></defs>
-          <rect width="100%" height="100%" fill="url(#dtg)" />
-        </svg>
-      </div>
-      {Array.from({ length: 20 }).map((_, i) => (
-        <motion.div key={i} className="absolute bottom-0" style={{
-          left: `${2 + i * 5}%`, width: 8 + (i % 3) * 4,
-          borderRadius: '4px 4px 0 0',
-          background: `linear-gradient(to top, rgba(245,158,11,0.02), rgba(245,158,11,0.09))`,
-          borderTop: '1px solid rgba(245,158,11,0.06)',
-          height: barHeights[i],
-        }} />
-      ))}
-      {Array.from({ length: 15 }).map((_, i) => (
-        <motion.div key={`c-${i}`} className="absolute text-lg font-mono font-bold"
-          style={{ color: 'rgba(245,158,11,0.03)', left: `${3 + i * 6.5}%` }}
-          animate={{ y: active ? [-40, 120] : [-20, 60], opacity: active ? [0, 0.2, 0] : [0, 0.05, 0] }}
-          transition={{ duration: 6, repeat: Infinity, delay: i * 0.25, ease: "linear" }}>
-          {["Σ", "π", "∂", "λ", "μ", "σ", "Δ", "∫", "∞", "√", "θ", "Ω", "ε", "φ", "ψ"][i]}
-        </motion.div>
-      ))}
-    </motion.div>
-  );
-}
+        {subject.id === 1 && (
+          <motion.div style={{ opacity: dotO }} className="absolute inset-0">
+            <div className="absolute inset-0 opacity-[0.018]">
+              <svg className="w-full h-full" viewBox="0 0 1000 600">
+                <defs><pattern id={`dt-${index}`} width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r="1" fill="var(--accent-gold)" /></pattern></defs>
+                <rect width="100%" height="100%" fill={`url(#dt-${index})`} />
+              </svg>
+            </div>
+            {Array.from({ length: 16 }).map((_, i) => (
+              <motion.div
+                key={i} className="absolute bottom-0" style={{
+                  left: `${3 + i * 6}%`, width: 6 + (i % 3) * 3,
+                  borderRadius: '3px 3px 0 0',
+                  background: `linear-gradient(to top, rgba(245,158,11,0.02), rgba(245,158,11,0.08))`,
+                  borderTop: '1px solid rgba(245,158,11,0.05)',
+                  height: useTransform(localP, [0.06 + i * 0.015, 0.3 + i * 0.015], [0, 30 + i * 5]),
+                  opacity: useTransform(localP, [0.06 + i * 0.015, 0.14 + i * 0.015], [0, 0.6]),
+                }}
+              />
+            ))}
+            {Array.from({ length: 10 }).map((_, i) => (
+              <motion.div
+                key={`ch-${i}`} className="absolute text-base font-mono font-bold"
+                style={{
+                  color: 'rgba(245,158,11,0.03)', left: `${5 + i * 9}%`,
+                  opacity: useTransform(localP, [0.12 + i * 0.02, 0.2 + i * 0.02], [0, 0.15]),
+                  y: useTransform(localP, [0.12 + i * 0.02, 0.55 + i * 0.02], [-20, 90]),
+                }}
+              >
+                {["Σ", "π", "∂", "λ", "μ", "σ", "Δ", "∫", "∞", "√"][i]}
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
 
-/* ── Scroll-driven background: Finance ── */
-function ScrollFinanceBg({ scrollYProgress, opacity, active }: { scrollYProgress: MotionValue<number>; opacity: MotionValue<number>; active: boolean }) {
-  return (
-    <motion.div style={{ opacity }} className="absolute inset-0 pointer-events-none overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.018]">
-        <svg className="w-full h-full" viewBox="0 0 800 600">
-          <defs><pattern id="fng" width="35" height="35" patternUnits="userSpaceOnUse">
-            <path d="M 35 0 L 0 0 0 35" fill="none" stroke="var(--accent-rose)" strokeWidth="0.25" /></pattern></defs>
-          <rect width="100%" height="100%" fill="url(#fng)" />
-        </svg>
+        {subject.id === 2 && (
+          <motion.div style={{ opacity: useTransform(localP, [0, 0.08], [0, 0.5]) }} className="absolute inset-0">
+            <div className="absolute inset-0 opacity-[0.018]">
+              <svg className="w-full h-full" viewBox="0 0 800 600">
+                <defs><pattern id={`fg-${index}`} width="30" height="30" patternUnits="userSpaceOnUse">
+                  <path d="M 30 0 L 0 0 0 30" fill="none" stroke="var(--accent-rose)" strokeWidth="0.2" /></pattern></defs>
+                <rect width="100%" height="100%" fill={`url(#fg-${index})`} />
+              </svg>
+            </div>
+            {Array.from({ length: 10 }).map((_, i) => {
+              const up = i % 2 === 0;
+              return (
+                <motion.div key={i} className="absolute" style={{
+                  left: `${5 + i * 9}%`, bottom: `${20 + Math.floor(i / 2) * 22}%`, width: 5,
+                  background: up
+                    ? 'linear-gradient(to top, rgba(244,63,94,0.02), rgba(244,63,94,0.06))'
+                    : 'linear-gradient(to bottom, rgba(244,63,94,0.02), rgba(244,63,94,0.06))',
+                  borderLeft: '1px solid rgba(244,63,94,0.03)', borderRight: '1px solid rgba(244,63,94,0.03)',
+                  height: useTransform(localP, [0.05 + i * 0.02, 0.25 + i * 0.02], [0, 20 + i * 4]),
+                  opacity: useTransform(localP, [0.05 + i * 0.02, 0.12 + i * 0.02], [0, 0.5]),
+                }} />
+              );
+            })}
+            <svg className="absolute bottom-[20%] left-[5%] right-[5%] h-[20%] opacity-[0.035]" viewBox="0 0 400 80" preserveAspectRatio="none">
+              <motion.path
+                d="M0,60 C20,55 40,65 60,50 C80,35 100,45 120,30 C140,15 160,25 180,20 C200,10 220,30 240,25 C260,15 280,35 300,28 C320,18 340,38 360,32 C380,22 400,35 400,35"
+                fill="none" stroke="var(--accent-rose)" strokeWidth="0.8"
+                strokeDasharray="800"
+                strokeDashoffset={useTransform(localP, [0.08, 0.45], [800, 0])}
+              />
+            </svg>
+          </motion.div>
+        )}
       </div>
-      {Array.from({ length: 14 }).map((_, i) => {
-        const up = i % 2 === 0;
-        return (
-          <motion.div key={i} className="absolute" style={{
-            left: `${3 + i * 7}%`, bottom: `${15 + Math.floor(i / 2) * 25}%`, width: 6,
-            background: up
-              ? 'linear-gradient(to top, rgba(244,63,94,0.02), rgba(244,63,94,0.07))'
-              : 'linear-gradient(to bottom, rgba(244,63,94,0.02), rgba(244,63,94,0.07))',
-            borderLeft: '1px solid rgba(244,63,94,0.04)', borderRight: '1px solid rgba(244,63,94,0.04)',
-          }}
-            animate={{ height: active ? [20 + i * 3, 65 + i * 7, 20 + i * 3] : [15 + i * 2, 35 + i * 4, 15 + i * 2] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.12 }} />
-        );
-      })}
-      <svg className="absolute bottom-[18%] left-[5%] right-[5%] h-[22%] opacity-[0.04]" viewBox="0 0 400 80" preserveAspectRatio="none">
-        <motion.path d="M0,60 C20,55 40,65 60,50 C80,35 100,45 120,30 C140,15 160,25 180,20 C200,10 220,30 240,25 C260,15 280,35 300,28 C320,18 340,38 360,32 C380,22 400,35 400,35"
-          fill="none" stroke="var(--accent-rose)" strokeWidth="0.8"
-          animate={{ strokeDashoffset: [800, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "linear" }} strokeDasharray="800" />
-      </svg>
+
+      {/* Content */}
+      <div className="relative z-10 w-full h-full flex items-center">
+        <div className={`w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-8 md:gap-16`}>
+          {/* Icon */}
+          <motion.div
+            style={{ scale: iconS, opacity: iconO, y: iconY }}
+            className="flex-1 flex items-center justify-center"
+          >
+            <div className="w-56 h-56 md:w-72 md:h-72 rounded-[2rem] flex items-center justify-center relative"
+              style={{
+                background: `linear-gradient(135deg, ${subject.color}12, ${subject.color}06)`,
+                border: `1px solid ${subject.borderColor}`,
+                boxShadow: `0 0 100px ${subject.color}06`,
+              }}
+            >
+              <motion.div
+                style={{ rotate: useTransform(localP, [0, 1], [0, 10]) }}
+              >
+                {subject.id === 0 && <ShieldIcon size={140} color={subject.color} />}
+                {subject.id === 1 && <ChartIcon size={140} color={subject.color} />}
+                {subject.id === 2 && <GraphIcon size={140} color={subject.color} />}
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* Text + bubble */}
+          <div className="flex-1 flex flex-col items-start gap-5">
+            <motion.h2
+              style={{ opacity: titleO, y: titleY2 }}
+              className="text-4xl md:text-6xl font-bold tracking-tight leading-[1.05]"
+            >
+              <span style={{
+                background: `linear-gradient(135deg, ${subject.color}, var(--text-primary) 70%)`,
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+              }}>
+                {subject.title}
+              </span>
+            </motion.h2>
+
+            {/* Message bubble */}
+            <motion.div
+              style={{ opacity: bubbleO, x: bubbleX2 }}
+              className="relative max-w-sm"
+            >
+              <div className="glass rounded-2xl p-5" style={{
+                border: `1px solid ${subject.borderColor}`,
+                boxShadow: `0 4px 30px ${subject.color}06`,
+              }}>
+                <p className="text-sm md:text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  {subject.id === 0 && "Master network defense, ethical hacking, incident response, and threat intelligence through hands-on labs and real-world attack simulations."}
+                  {subject.id === 1 && "Build predictive models, analyze real datasets, and deploy ML solutions using Python, TensorFlow, and industry-standard tools."}
+                  {subject.id === 2 && "Learn quantitative analysis, algorithmic trading, and risk modeling with real financial data and market simulations."}
+                </p>
+              </div>
+              {/* Bubble tail */}
+              <div className="absolute -left-2 top-1/2 -translate-y-1/2 w-3 h-3 rotate-45" style={{
+                background: 'var(--glass-bg)',
+                borderLeft: `1px solid ${subject.borderColor}`,
+                borderBottom: `1px solid ${subject.borderColor}`,
+                backdropFilter: 'blur(24px)',
+              }} />
+            </motion.div>
+
+            {/* CTA */}
+            <motion.div style={{ opacity: ctaO }}>
+              <Link href={subject.cta}
+                className="btn-primary px-8 py-3.5 rounded-xl text-base font-semibold relative group overflow-hidden ripple-btn inline-block"
+                style={subject.btnStyle as React.CSSProperties}
+              >
+                <span className="relative z-10">Explore {subject.title}</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/8 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </div>
     </motion.div>
   );
 }
