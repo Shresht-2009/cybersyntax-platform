@@ -1,0 +1,238 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  MENTOR
+  STUDENT
+}
+
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum ResumeType {
+  PDF
+  IMAGE
+  TEXT
+}
+
+enum SubmissionStatus {
+  PENDING
+  SUBMITTED
+  GRADED
+}
+
+enum TransactionType {
+  CREDIT
+  DEBIT
+}
+
+enum QuestionType {
+  MCQ
+  TRUE_FALSE
+  SHORT_ANSWER
+}
+
+enum QuizAttemptStatus {
+  IN_PROGRESS
+  SUBMITTED
+  VIOLATED
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  hashedPassword String
+  role          Role     @default(STUDENT)
+  image         String?
+  emailVerified Boolean  @default(false)
+  verificationToken String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  mentorProfile  MentorProfile?
+  studentProfile StudentProfile?
+  sentMessages   Message[]       @relation("SentMessages")
+  mentorConversations Conversation[] @relation("MentorConversations")
+  studentConversations Conversation[] @relation("StudentConversations")
+}
+
+model MentorProfile {
+  id          String @id @default(cuid())
+  userId      String @unique
+  bio         String?
+  educatorKey String
+  totalFunds  Float  @default(0)
+
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  announcements Announcement[]
+  assignments  Assignment[]
+  courses      Course[]
+  quizzes      Quiz[]
+  transactions Transaction[]
+}
+
+model StudentProfile {
+  id        String            @id @default(cuid())
+  userId    String            @unique
+  program   String?
+  resume    String?
+  resumeType ResumeType?
+  status    ApplicationStatus @default(PENDING)
+  createdAt DateTime          @default(now())
+
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  submissions  Submission[]
+  quizAttempts QuizAttempt[]
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  mentorId  String
+  title     String
+  content   String
+  imageUrl  String?
+  createdAt DateTime @default(now())
+
+  mentor MentorProfile @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+}
+
+model Assignment {
+  id          String   @id @default(cuid())
+  mentorId    String
+  title       String
+  description String
+  dueDate     DateTime?
+  fileUrl     String?
+  createdAt   DateTime @default(now())
+
+  mentor      MentorProfile @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+  submissions Submission[]
+}
+
+model Submission {
+  id           String           @id @default(cuid())
+  assignmentId String
+  studentId    String
+  content      String?
+  fileUrl      String?
+  status       SubmissionStatus @default(SUBMITTED)
+  grade        Float?
+  feedback     String?
+  submittedAt  DateTime         @default(now())
+
+  assignment Assignment     @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  student    StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  mentorId  String
+  studentId String
+  createdAt DateTime @default(now())
+
+  messages Message[]
+  mentor   User @relation("MentorConversations", fields: [mentorId], references: [id], onDelete: Cascade)
+  student  User @relation("StudentConversations", fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([mentorId, studentId])
+}
+
+model Message {
+  id             String    @id @default(cuid())
+  conversationId String
+  senderId       String
+  content        String
+  createdAt      DateTime  @default(now())
+  readAt         DateTime?
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model Transaction {
+  id          String          @id @default(cuid())
+  mentorId    String
+  amount      Float
+  type        TransactionType
+  description String
+  createdAt   DateTime        @default(now())
+
+  mentor MentorProfile @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  mentorId    String
+  title       String
+  description String?
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+
+  mentor MentorProfile @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+  lessons Lesson[]
+  quizzes Quiz[]
+}
+
+model Lesson {
+  id       String  @id @default(cuid())
+  courseId  String
+  title    String
+  type     String  @default("TEXT")
+  content  String?
+  videoUrl String?
+  order    Int
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model Quiz {
+  id              String        @id @default(cuid())
+  mentorId        String
+  courseId        String?
+  title           String
+  timeLimit       Int?
+  shuffleQuestions Boolean      @default(true)
+  createdAt       DateTime      @default(now())
+
+  mentor  MentorProfile @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+  course  Course?       @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  questions Question[]
+  attempts  QuizAttempt[]
+}
+
+model Question {
+  id            String       @id @default(cuid())
+  quizId        String
+  text          String
+  type          QuestionType @default(MCQ)
+  options       String[]
+  correctAnswer String
+  points        Int          @default(1)
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+model QuizAttempt {
+  id         String           @id @default(cuid())
+  quizId     String
+  studentId  String
+  score      Float?
+  answers    Json?
+  violations Int              @default(0)
+  status     QuizAttemptStatus @default(IN_PROGRESS)
+  startedAt  DateTime         @default(now())
+  submittedAt DateTime?
+
+  quiz    Quiz           @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  student StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}

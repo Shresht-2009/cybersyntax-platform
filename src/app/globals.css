@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+:root {
+  --cyber-cyan: #00f0ff;
+  --cyber-magenta: #ff00aa;
+  --cyber-purple: #7b2ff7;
+  --cyber-dark: #0a0a1a;
+  --cyber-card: #12122a;
+  --cyber-border: #1e1e4a;
+  --foreground: #e0e0f0;
+  --muted: #8888aa;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--cyber-border) transparent;
+}
+
+body {
+  background: var(--cyber-dark);
+  color: var(--foreground);
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+.glass {
+  background: rgba(18, 18, 42, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(30, 30, 74, 0.5);
+}
+
+.glass-hover:hover {
+  background: rgba(30, 30, 74, 0.6);
+  border-color: rgba(0, 240, 255, 0.3);
+}
+
+.cyber-gradient {
+  background: linear-gradient(135deg, var(--cyber-cyan), var(--cyber-magenta));
+}
+
+.cyber-text-gradient {
+  background: linear-gradient(135deg, var(--cyber-cyan), var(--cyber-magenta));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cyber-glow {
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.15), 0 0 40px rgba(255, 0, 170, 0.1);
+}
+
+.cyber-input {
+  background: rgba(18, 18, 42, 0.8);
+  border: 1px solid var(--cyber-border);
+  color: var(--foreground);
+  transition: all 0.2s;
+}
+
+.cyber-input:focus {
+  border-color: var(--cyber-cyan);
+  box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.1);
+  outline: none;
+}
+
+.cyber-btn {
+  background: linear-gradient(135deg, var(--cyber-cyan), var(--cyber-purple));
+  color: #000;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.cyber-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+}
+
+.cyber-btn-outline {
+  border: 1px solid var(--cyber-cyan);
+  color: var(--cyber-cyan);
+  transition: all 0.2s;
+}
+
+.cyber-btn-outline:hover {
+  background: rgba(0, 240, 255, 0.1);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
