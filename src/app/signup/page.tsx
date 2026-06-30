@@ -64,7 +64,7 @@ function SignupForm() {
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-[var(--bg-primary)]">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[var(--accent-purple)]/10 rounded-full blur-[140px] animate-pulse-glow" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[var(--accent-gold)]/10 rounded-full blur-[140px] animate-pulse-glow" />
       </div>
 
       <motion.div
@@ -73,7 +73,7 @@ function SignupForm() {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="relative z-10 w-full max-w-md mx-4"
       >
-        <div className="card p-8 shadow-[var(--shadow-glow-purple)]">
+        <div className="card p-8 shadow-[var(--shadow-glow)]">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gradient mb-2">Join CyberSyntax</h1>
             <p className="text-sm text-[var(--text-secondary)]">Create your account and start your journey</p>
@@ -96,8 +96,8 @@ function SignupForm() {
                 className="card w-full p-5 text-left hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-[var(--accent-cyan)]/10 flex items-center justify-center ring-1 ring-[var(--accent-cyan)]/20 shrink-0">
-                    <svg className="w-5 h-5 text-[var(--accent-cyan)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-11 h-11 rounded-xl bg-[var(--accent-emerald)]/10 flex items-center justify-center ring-1 ring-[var(--accent-emerald)]/20 shrink-0">
+                    <svg className="w-5 h-5 text-[var(--accent-emerald)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 7l-9-5 9-5 9 5-9 5z" />
                     </svg>
                   </div>
@@ -112,8 +112,8 @@ function SignupForm() {
                 className="card w-full p-5 text-left hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-[var(--accent-purple)]/10 flex items-center justify-center ring-1 ring-[var(--accent-purple)]/20 shrink-0">
-                    <svg className="w-5 h-5 text-[var(--accent-purple)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-11 h-11 rounded-xl bg-[var(--accent-gold)]/10 flex items-center justify-center ring-1 ring-[var(--accent-gold)]/20 shrink-0">
+                    <svg className="w-5 h-5 text-[var(--accent-gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                     </svg>
                   </div>
@@ -199,7 +199,7 @@ function SignupForm() {
 
           <p className="text-center mt-6 text-sm text-[var(--text-secondary)]">
             Already have an account?{" "}
-            <Link href="/login" className="text-[var(--accent-cyan)] hover:underline font-medium">
+            <Link href="/login" className="text-[var(--accent-emerald)] hover:underline font-medium">
               Sign in
             </Link>
           </p>

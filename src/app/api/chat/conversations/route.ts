@@ -11,20 +11,24 @@ export async function GET(request: Request) {
   const role = url.searchParams.get("role");
 
   let conversations;
+
   if (role === "MENTOR" && user.role === "MENTOR") {
     conversations = await prisma.conversation.findMany({
-      where: { mentorId: user.id },
       include: {
-        student: { select: { id: true, name: true, email: true, image: true } },
+        userOne: { select: { id: true, name: true, email: true, image: true, role: true } },
+        userTwo: { select: { id: true, name: true, email: true, image: true, role: true } },
         messages: { orderBy: { createdAt: "desc" }, take: 1 },
       },
       orderBy: { createdAt: "desc" },
     });
   } else {
     conversations = await prisma.conversation.findMany({
-      where: { studentId: user.id },
+      where: {
+        OR: [{ userOneId: user.id }, { userTwoId: user.id }],
+      },
       include: {
-        mentor: { select: { id: true, name: true, email: true, image: true } },
+        userOne: { select: { id: true, name: true, email: true, image: true, role: true } },
+        userTwo: { select: { id: true, name: true, email: true, image: true, role: true } },
         messages: { orderBy: { createdAt: "desc" }, take: 1 },
       },
       orderBy: { createdAt: "desc" },
@@ -32,4 +36,35 @@ export async function GET(request: Request) {
   }
 
   return NextResponse.json(conversations);
+}
+
+export async function POST(request: Request) {
+  const session = await auth();
+  const user = session?.user as any;
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { participantId } = await request.json();
+  if (!participantId) return NextResponse.json({ error: "participantId required" }, { status: 400 });
+
+  const [userOneId, userTwoId] = [user.id, participantId].sort();
+
+  const existing = await prisma.conversation.findUnique({
+    where: { userOneId_userTwoId: { userOneId, userTwoId } },
+    include: {
+      userOne: { select: { id: true, name: true, email: true, image: true, role: true } },
+      userTwo: { select: { id: true, name: true, email: true, image: true, role: true } },
+    },
+  });
+
+  if (existing) return NextResponse.json(existing);
+
+  const conversation = await prisma.conversation.create({
+    data: { userOneId, userTwoId },
+    include: {
+      userOne: { select: { id: true, name: true, email: true, image: true, role: true } },
+      userTwo: { select: { id: true, name: true, email: true, image: true, role: true } },
+    },
+  });
+
+  return NextResponse.json(conversation);
 }

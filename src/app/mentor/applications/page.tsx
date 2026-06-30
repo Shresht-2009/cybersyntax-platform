@@ -53,14 +53,14 @@ export default function ApplicationsPage() {
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>{app.user?.name}</h3>
                   <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{app.user?.email}</p>
-                  <p className="text-sm mt-1" style={{ color: 'var(--accent-cyan)' }}>Program: {app.program || "Not specified"}</p>
+                  <p className="text-sm mt-1" style={{ color: 'var(--accent-emerald)' }}>Program: {app.program || "Not specified"}</p>
                   {app.resume && (
                     <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
                       Resume:{" "}
                       {app.resumeType === "TEXT" ? (
-                        <span style={{ color: 'var(--accent-cyan)' }}>Written application available</span>
+                        <span style={{ color: 'var(--accent-emerald)' }}>Written application available</span>
                       ) : (
-                        <a href={app.resume} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-cyan)' }}>
+                        <a href={app.resume} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-emerald)' }}>
                           View file
                         </a>
                       )}
@@ -68,7 +68,7 @@ export default function ApplicationsPage() {
                   )}
                   {app.diagnostic && (
                     <button onClick={() => setSelectedDiag(app.diagnostic)}
-                      className="text-xs mt-1" style={{ color: 'var(--accent-purple)' }}>
+                      className="text-xs mt-1" style={{ color: 'var(--accent-gold)' }}>
                       View diagnostic answers
                     </button>
                   )}
@@ -137,7 +137,7 @@ export default function ApplicationsPage() {
             <div className="space-y-3">
               {Object.entries(selectedDiag).map(([key, val]) => (
                 <div key={key}>
-                  <p className="text-xs uppercase tracking-wide" style={{ color: 'var(--accent-cyan)' }}>{key.replace(/([A-Z])/g, " $1")}</p>
+                  <p className="text-xs uppercase tracking-wide" style={{ color: 'var(--accent-emerald)' }}>{key.replace(/([A-Z])/g, " $1")}</p>
                   <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{String(val) || "Not answered"}</p>
                 </div>
               ))}

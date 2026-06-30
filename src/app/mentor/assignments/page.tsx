@@ -133,7 +133,7 @@ export default function AssignmentsPage() {
                         </p>
                       )}
                       {sub.feedback && sub.status === "GRADED" && (
-                        <p className="text-xs mt-2" style={{ color: 'var(--accent-cyan)' }}>
+                        <p className="text-xs mt-2" style={{ color: 'var(--accent-emerald)' }}>
                           Feedback: {sub.feedback}
                         </p>
                       )}

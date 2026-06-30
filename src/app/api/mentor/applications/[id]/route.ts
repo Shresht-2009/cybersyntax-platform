@@ -20,12 +20,13 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   if (status === "ACCEPTED") {
     const mentor = await prisma.mentorProfile.findUnique({ where: { userId: user.id } });
     if (mentor) {
+      const [userOneId, userTwoId] = [user.id, student.userId].sort();
       const existingConv = await prisma.conversation.findUnique({
-        where: { mentorId_studentId: { mentorId: user.id, studentId: student.userId } },
+        where: { userOneId_userTwoId: { userOneId, userTwoId } },
       });
       if (!existingConv) {
         await prisma.conversation.create({
-          data: { mentorId: user.id, studentId: student.userId },
+          data: { userOneId, userTwoId },
         });
       }
     }

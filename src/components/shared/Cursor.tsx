@@ -33,8 +33,8 @@ export function Cursor() {
           width: 8,
           height: 8,
           borderRadius: "50%",
-          background: "var(--accent-cyan)",
-          boxShadow: "0 0 12px var(--accent-cyan), 0 0 32px rgba(0,212,255,0.3)",
+          background: "var(--accent-emerald)",
+          boxShadow: "0 0 12px var(--accent-emerald), 0 0 32px rgba(16,185,129,0.3)",
           transform: "translate(-50%, -50%)",
           transition: "width 0.15s, height 0.15s, background 0.15s",
         }}
@@ -47,10 +47,10 @@ export function Cursor() {
           width: 40,
           height: 40,
           borderRadius: "50%",
-          border: "1px solid rgba(0,212,255,0.15)",
-          background: "rgba(0,212,255,0.03)",
+          border: "1px solid rgba(16,185,129,0.15)",
+          background: "rgba(16,185,129,0.03)",
           transform: "translate(-50%, -50%)",
-          boxShadow: "0 0 24px rgba(0,212,255,0.04)",
+          boxShadow: "0 0 24px rgba(16,185,129,0.04)",
         }}
       />
     </>

@@ -89,9 +89,9 @@ export default function MentorDashboard() {
               <Link
                 href={action.href}
                 className="flex flex-col items-center gap-3 p-5 rounded-xl transition-all"
-                style={{ background: 'rgba(var(--accent-cyan-rgb), 0.04)' }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(var(--accent-cyan-rgb), 0.1)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(var(--accent-cyan-rgb), 0.04)'}
+                style={{ background: 'rgba(var(--accent-emerald-rgb), 0.04)' }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(var(--accent-emerald-rgb), 0.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(var(--accent-emerald-rgb), 0.04)'}
               >
                 <action.icon />
                 <span className="text-sm text-center font-medium" style={{ color: 'var(--text-secondary)' }}>{action.label}</span>

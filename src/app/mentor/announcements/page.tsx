@@ -144,7 +144,7 @@ export default function AnnouncementsPage() {
             )}
             <div className="flex items-center gap-2 mb-3">
               {ann.imageUrl && <span className="badge badge-green">Image</span>}
-              {ann.videoUrl && <span className="badge badge-purple">Video</span>}
+              {ann.videoUrl && <span className="badge badge-gold">Video</span>}
             </div>
             <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>{ann.title}</h3>
             <p className="whitespace-pre-wrap" style={{ color: 'var(--text-secondary)' }}>{ann.content}</p>

@@ -86,7 +86,7 @@ export default function QuizDetailPage() {
                 <input key={i} type="text" value={opt} onChange={(e) => updateOption(i, e.target.value)}
                   className="input w-full text-sm" placeholder={`Option ${i + 1}`} />
               ))}
-              <button type="button" onClick={addOption} className="text-sm" style={{ color: 'var(--accent-cyan)' }}>
+              <button type="button" onClick={addOption} className="text-sm" style={{ color: 'var(--accent-emerald)' }}>
                 + Add option
               </button>
             </div>
@@ -139,7 +139,7 @@ export default function QuizDetailPage() {
               <div className="flex-1">
                 <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{i + 1}. {q.text}</p>
                 <div className="flex gap-2 mt-1">
-                  <span className="badge badge-cyan">{q.type}</span>
+                  <span className="badge badge-emerald">{q.type}</span>
                   <span style={{ color: 'var(--text-secondary)' }} className="text-xs">{q.points} pt</span>
                 </div>
                 {q.options?.length > 0 && (

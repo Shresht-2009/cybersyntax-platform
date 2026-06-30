@@ -68,8 +68,8 @@ model User {
   mentorProfile  MentorProfile?
   studentProfile StudentProfile?
   sentMessages   Message[]       @relation("SentMessages")
-  mentorConversations Conversation[] @relation("MentorConversations")
-  studentConversations Conversation[] @relation("StudentConversations")
+  conversationsAsOne Conversation[] @relation("ConversationUserOne")
+  conversationsAsTwo Conversation[] @relation("ConversationUserTwo")
 }
 
 model MentorProfile {
@@ -145,15 +145,15 @@ model Submission {
 
 model Conversation {
   id        String   @id @default(cuid())
-  mentorId  String
-  studentId String
+  userOneId String
+  userTwoId String
   createdAt DateTime @default(now())
 
   messages Message[]
-  mentor   User @relation("MentorConversations", fields: [mentorId], references: [id], onDelete: Cascade)
-  student  User @relation("StudentConversations", fields: [studentId], references: [id], onDelete: Cascade)
+  userOne  User @relation("ConversationUserOne", fields: [userOneId], references: [id], onDelete: Cascade)
+  userTwo  User @relation("ConversationUserTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
 
-  @@unique([mentorId, studentId])
+  @@unique([userOneId, userTwoId])
 }
 
 model Message {

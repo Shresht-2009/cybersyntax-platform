@@ -157,7 +157,7 @@ export default function CourseDetailPage() {
           <h1 className="text-3xl font-bold text-gradient mb-2">{course.title}</h1>
           <p style={{ color: 'var(--text-secondary)' }}>{course.description}</p>
           <div className="flex items-center gap-3 mt-3">
-            <span className={`badge ${course.status === 'PUBLISHED' ? 'badge-cyan' : 'badge-yellow'}`}>
+            <span className={`badge ${course.status === 'PUBLISHED' ? 'badge-emerald' : 'badge-yellow'}`}>
               {course.status || "DRAFT"}
             </span>
             {course.status === "DRAFT" && (
@@ -239,12 +239,12 @@ export default function CourseDetailPage() {
               className="card p-4 flex items-center gap-4"
             >
               <div className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold"
-                style={{ background: 'rgba(var(--accent-cyan-rgb), 0.1)', color: 'var(--accent-cyan)' }}>
+                style={{ background: 'rgba(var(--accent-emerald-rgb), 0.1)', color: 'var(--accent-emerald)' }}>
                 {lesson.order}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium truncate" style={{ color: 'var(--text-primary)' }}>{lesson.title}</p>
-                <span className={`badge ${lesson.type === 'VIDEO' ? 'badge-purple' : 'badge-cyan'} mt-1`}>
+                <span className={`badge ${lesson.type === 'VIDEO' ? 'badge-gold' : 'badge-emerald'} mt-1`}>
                   {lesson.type === "VIDEO" ? "Video" : "Text"}
                 </span>
               </div>
@@ -344,7 +344,7 @@ export default function CourseDetailPage() {
                                 </div>
                               ))}
                               <button type="button" onClick={addOption} className="text-xs font-medium"
-                                style={{ color: 'var(--accent-cyan)' }}>+ Add option</button>
+                                style={{ color: 'var(--accent-emerald)' }}>+ Add option</button>
                             </div>
                           )}
                           <div>
@@ -401,7 +401,7 @@ export default function CourseDetailPage() {
                                 <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
                                   {i + 1}. {q.text}
                                 </p>
-                                <span className="badge badge-cyan text-xs whitespace-nowrap">{q.type}</span>
+                                <span className="badge badge-emerald text-xs whitespace-nowrap">{q.type}</span>
                               </div>
                               {q.options?.length > 0 && (
                                 <div className="flex flex-wrap gap-1.5 mt-2">

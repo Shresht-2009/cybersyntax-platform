@@ -31,8 +31,8 @@ export default function MentorLayout({ children }: { children: React.ReactNode }
   return (
     <div className="min-h-screen flex relative" style={{ background: 'var(--bg-deep)' }}>
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full opacity-[0.04]" style={{ background: 'radial-gradient(circle, var(--accent-cyan), transparent)' }} />
-        <div className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full opacity-[0.03]" style={{ background: 'radial-gradient(circle, var(--accent-purple), transparent)' }} />
+        <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full opacity-[0.04]" style={{ background: 'radial-gradient(circle, var(--accent-emerald), transparent)' }} />
+        <div className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full opacity-[0.03]" style={{ background: 'radial-gradient(circle, var(--accent-gold), transparent)' }} />
       </div>
 
       <aside className="fixed inset-y-0 left-0 z-40 w-64 hidden lg:flex flex-col card-glass" style={{ borderRight: 'none', borderLeft: 'none', borderTop: 'none', borderBottom: 'none', borderRadius: 0 }}>
@@ -121,7 +121,7 @@ function CyberLogo() {
       <rect x="2" y="2" width="28" height="28" rx="6" stroke="url(#g)" strokeWidth="2" />
       <path d="M16 8L16 24M8 16L24 16" stroke="url(#g)" strokeWidth="2" strokeLinecap="round" />
       <circle cx="16" cy="16" r="4" fill="url(#g)" />
-      <defs><linearGradient id="g" x1="4" y1="4" x2="28" y2="28"><stop stopColor="#00d4ff" /><stop offset="1" stopColor="#8b5cf6" /></linearGradient></defs>
+      <defs><linearGradient id="g" x1="4" y1="4" x2="28" y2="28"><stop stopColor="#10b981" /><stop offset="1" stopColor="#f59e0b" /></linearGradient></defs>
     </svg>
   );
 }

@@ -53,7 +53,7 @@ export default function LoginPage() {
           className="absolute rounded-full"
           style={{
             width: 600, height: 600,
-            background: 'radial-gradient(circle, rgba(0,212,255,0.06), transparent 70%)',
+            background: 'radial-gradient(circle, rgba(16,185,129,0.06), transparent 70%)',
             left: '50%', top: '50%',
             transform: 'translate(-50%, -50%)',
             filter: 'blur(100px)',
@@ -68,7 +68,7 @@ export default function LoginPage() {
           className="absolute rounded-full"
           style={{
             width: 400, height: 400,
-            background: 'radial-gradient(circle, rgba(139,92,246,0.04), transparent 70%)',
+            background: 'radial-gradient(circle, rgba(245,158,11,0.04), transparent 70%)',
             left: '25%', top: '15%',
             filter: 'blur(80px)',
           }}
@@ -92,7 +92,7 @@ export default function LoginPage() {
         <svg className="w-full h-full" viewBox="0 0 1000 800" preserveAspectRatio="none">
           <defs>
             <pattern id="grid4" width="60" height="60" patternUnits="userSpaceOnUse">
-              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="var(--accent-cyan)" strokeWidth="0.5" />
+              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="var(--accent-emerald)" strokeWidth="0.5" />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid4)" />
@@ -114,7 +114,7 @@ export default function LoginPage() {
           >
             <motion.div
               className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4"
-              style={{ background: 'rgba(0,212,255,0.04)', border: '1px solid rgba(0,212,255,0.08)' }}
+              style={{ background: 'rgba(16,185,129,0.04)', border: '1px solid rgba(16,185,129,0.08)' }}
               whileHover={{ scale: 1.08, rotate: [0, -6, 6, 0] }}
               transition={{ duration: 0.3 }}
             >
@@ -124,12 +124,12 @@ export default function LoginPage() {
                 <circle cx="16" cy="16" r="4" fill="url(#g2)" />
                 <defs>
                   <linearGradient id="g2" x1="4" y1="4" x2="28" y2="28">
-                    <stop stopColor="#00d4ff" /><stop offset="1" stopColor="#f472b6" />
+                    <stop stopColor="#10b981" /><stop offset="1" stopColor="#f43f5e" />
                   </linearGradient>
                 </defs>
               </svg>
             </motion.div>
-            <h1 className="text-3xl font-bold mb-2" style={{ background: 'linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Welcome Back</h1>
+            <h1 className="text-3xl font-bold mb-2" style={{ background: 'linear-gradient(135deg, var(--accent-emerald), var(--accent-rose))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Welcome Back</h1>
             <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Sign in to your CyberSyntax account</p>
           </motion.div>
 
@@ -177,7 +177,7 @@ export default function LoginPage() {
             style={{ color: 'var(--text-secondary)' }}
           >
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="font-medium hover:underline" style={{ color: 'var(--accent-cyan)' }}>
+            <Link href="/signup" className="font-medium hover:underline" style={{ color: 'var(--accent-emerald)' }}>
               Sign up
             </Link>
           </motion.p>
