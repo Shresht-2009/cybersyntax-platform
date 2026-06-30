@@ -27,10 +27,15 @@ export async function POST(request: Request) {
   const mentor = await prisma.mentorProfile.findUnique({ where: { userId: user.id } });
   if (!mentor) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const { title, timeLimit } = await request.json();
+  const { title, timeLimit, courseId } = await request.json();
 
   const quiz = await prisma.quiz.create({
-    data: { mentorId: mentor.id, title, timeLimit: timeLimit || null },
+    data: {
+      mentorId: mentor.id,
+      title,
+      timeLimit: timeLimit || null,
+      courseId: courseId || null,
+    },
   });
 
   return NextResponse.json(quiz);

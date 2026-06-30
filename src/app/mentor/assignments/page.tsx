@@ -11,6 +11,10 @@ export default function AssignmentsPage() {
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
 
+  const [gradingId, setGradingId] = useState<string | null>(null);
+  const [gradeValues, setGradeValues] = useState<Record<string, string>>({});
+  const [feedbackValues, setFeedbackValues] = useState<Record<string, string>>({});
+
   useEffect(() => {
     fetch("/api/mentor/assignments")
       .then((r) => r.json())
@@ -35,6 +39,29 @@ export default function AssignmentsPage() {
       setShowForm(false);
     }
     setLoading(false);
+  };
+
+  const handleGrade = async (submissionId: string) => {
+    const grade = gradeValues[submissionId];
+    const feedback = feedbackValues[submissionId] || "";
+    if (!grade) return;
+
+    const res = await fetch(`/api/mentor/submissions/${submissionId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ grade: parseInt(grade), feedback }),
+    });
+    if (res.ok) {
+      setAssignments((prev) =>
+        prev.map((a) => ({
+          ...a,
+          submissions: a.submissions.map((s: any) =>
+            s.id === submissionId ? { ...s, grade: parseInt(grade), feedback, status: "GRADED" } : s
+          ),
+        }))
+      );
+      setGradingId(null);
+    }
   };
 
   return (
@@ -90,16 +117,65 @@ export default function AssignmentsPage() {
                 </div>
               </div>
               {a.submissions && a.submissions.length > 0 && (
-                <div className="mt-4 space-y-2">
+                <div className="mt-4 space-y-3">
                   <div className="divider" />
                   {a.submissions.map((sub: any) => (
-                    <div key={sub.id} className="flex items-center justify-between p-2 rounded-lg" style={{ background: 'var(--bg-secondary)' }}>
-                      <span className="text-sm" style={{ color: 'var(--text-primary)' }}>{sub.student?.user?.name}</span>
-                      <div className="flex items-center gap-2">
+                    <div key={sub.id} className="p-3 rounded-lg" style={{ background: 'var(--bg-secondary)' }}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{sub.student?.user?.name}</span>
                         <span className={`badge ${sub.status === "GRADED" ? "badge-green" : "badge-yellow"}`}>
-                          {sub.grade ? `${sub.grade}/100` : "Ungraded"}
+                          {sub.grade ? `${sub.grade}/100` : "Not graded"}
                         </span>
                       </div>
+                      {sub.content && (
+                        <p className="text-xs mt-1 p-2 rounded" style={{ background: 'var(--bg-card)', color: 'var(--text-secondary)' }}>
+                          {sub.content}
+                        </p>
+                      )}
+                      {sub.feedback && sub.status === "GRADED" && (
+                        <p className="text-xs mt-2" style={{ color: 'var(--accent-cyan)' }}>
+                          Feedback: {sub.feedback}
+                        </p>
+                      )}
+                      {gradingId === sub.id ? (
+                        <div className="mt-3 flex gap-2 items-end">
+                          <div>
+                            <label className="text-xs block mb-1" style={{ color: 'var(--text-muted)' }}>Grade (0-100)</label>
+                            <input
+                              type="number" min={0} max={100}
+                              value={gradeValues[sub.id] || ""}
+                              onChange={(e) => setGradeValues((prev) => ({ ...prev, [sub.id]: e.target.value }))}
+                              className="input w-20 text-sm"
+                              placeholder="85"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <label className="text-xs block mb-1" style={{ color: 'var(--text-muted)' }}>Feedback</label>
+                            <input
+                              type="text"
+                              value={feedbackValues[sub.id] || ""}
+                              onChange={(e) => setFeedbackValues((prev) => ({ ...prev, [sub.id]: e.target.value }))}
+                              className="input text-sm"
+                              placeholder="Great work!"
+                            />
+                          </div>
+                          <button onClick={() => handleGrade(sub.id)} className="btn-primary px-3 py-2 text-xs">
+                            Save
+                          </button>
+                          <button onClick={() => setGradingId(null)} className="btn-ghost text-xs px-3 py-2">
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        sub.status !== "GRADED" && (
+                          <button
+                            onClick={() => { setGradingId(sub.id); setGradeValues((prev) => ({ ...prev, [sub.id]: "" })); }}
+                            className="btn-outline px-3 py-1.5 text-xs mt-2"
+                          >
+                            Grade
+                          </button>
+                        )
+                      )}
                     </div>
                   ))}
                 </div>
