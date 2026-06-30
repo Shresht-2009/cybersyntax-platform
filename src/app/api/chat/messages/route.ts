@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { pusher } from "@/lib/pusher";
 
 export async function GET(request: Request) {
   const session = await auth();
@@ -30,6 +31,8 @@ export async function POST(request: Request) {
   const message = await prisma.message.create({
     data: { conversationId, senderId: user.id, content },
   });
+
+  await pusher.trigger(`chat-${conversationId}`, "message", message);
 
   return NextResponse.json(message);
 }

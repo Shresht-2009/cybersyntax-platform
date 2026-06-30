@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
-import { io, Socket } from "socket.io-client";
+import Pusher from "pusher-js";
 
 export default function MentorChatPage() {
   const { data: session } = useSession();
@@ -11,7 +11,7 @@ export default function MentorChatPage() {
   const [activeConv, setActiveConv] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [text, setText] = useState("");
-  const socketRef = useRef<Socket | null>(null);
+  const pusherRef = useRef<Pusher | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,15 +31,22 @@ export default function MentorChatPage() {
 
   useEffect(() => {
     if (!session?.user) return;
-    const socket = io({ path: "/api/socket" });
-    socketRef.current = socket;
-    socket.emit("join", (session.user as any).id);
-    socket.on("message", (msg: any) => {
-      if (msg.conversationId === activeConv?.id) {
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, { cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER! });
+    pusherRef.current = pusher;
+
+    const channelName = activeConv ? `chat-${activeConv.id}` : null;
+    let channel: any = null;
+    if (channelName) {
+      channel = pusher.subscribe(channelName);
+      channel.bind("message", (msg: any) => {
         setMessages((prev) => [...prev, msg]);
-      }
-    });
-    return () => { socket.disconnect(); };
+      });
+    }
+
+    return () => {
+      if (channel) pusher.unsubscribe(channelName!);
+      pusher.disconnect();
+    };
   }, [session, activeConv?.id]);
 
   useEffect(() => {
@@ -49,7 +56,6 @@ export default function MentorChatPage() {
   const sendMessage = async () => {
     if (!text.trim() || !activeConv || !session?.user) return;
     const msg = { conversationId: activeConv.id, senderId: (session.user as any).id, content: text };
-    socketRef.current?.emit("message", msg);
     await fetch("/api/chat/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
