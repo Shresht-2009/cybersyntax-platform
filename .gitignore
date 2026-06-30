@@ -36,6 +36,9 @@ yarn-error.log*
 # opencode journal (personal session notes — not part of the project)
 opencoder-journal.md
 
+# screenshots for debugging / troubleshooting
+_screenshots/
+
 # vercel
 .vercel
 
