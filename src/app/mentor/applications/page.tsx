@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 
 export default function ApplicationsPage() {
   const [applications, setApplications] = useState<any[]>([]);
+  const [selectedDiag, setSelectedDiag] = useState<any>(null);
 
   useEffect(() => {
     fetch("/api/mentor/applications")
@@ -47,10 +48,10 @@ export default function ApplicationsPage() {
               transition={{ delay: i * 0.05 }}
               className="glass rounded-2xl p-6"
             >
-              <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold">{app.student?.user?.name}</h3>
-                  <p className="text-sm text-[#8888aa]">{app.student?.user?.email}</p>
+                  <h3 className="text-lg font-semibold">{app.user?.name}</h3>
+                  <p className="text-sm text-[#8888aa]">{app.user?.email}</p>
                   <p className="text-sm text-cyan-400 mt-1">Program: {app.program || "Not specified"}</p>
                   {app.resume && (
                     <p className="text-sm text-[#8888aa] mt-1">
@@ -63,6 +64,12 @@ export default function ApplicationsPage() {
                         </a>
                       )}
                     </p>
+                  )}
+                  {app.diagnostic && (
+                    <button onClick={() => setSelectedDiag(app.diagnostic)}
+                      className="text-xs text-purple-400 hover:underline mt-1">
+                      View diagnostic answers
+                    </button>
                   )}
                 </div>
                 <span className="px-3 py-1 rounded-full text-xs bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
@@ -99,8 +106,9 @@ export default function ApplicationsPage() {
             {reviewed.map((app) => (
               <div key={app.id} className="glass rounded-xl p-4 flex items-center justify-between">
                 <div>
-                  <p className="font-medium">{app.student?.user?.name}</p>
-                  <p className="text-sm text-[#8888aa]">{app.program || "No program"}</p>
+                  <p className="font-medium">{app.user?.name}</p>
+                  <p className="text-sm text-[#8888aa]">{app.user?.email}</p>
+                  <p className="text-xs text-[#666]">{app.program || "No program"}</p>
                 </div>
                 <span
                   className={`px-3 py-1 rounded-full text-xs border ${
@@ -113,6 +121,25 @@ export default function ApplicationsPage() {
                 </span>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {selectedDiag && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setSelectedDiag(null)}>
+          <div className="glass rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold">Diagnostic Answers</h3>
+              <button onClick={() => setSelectedDiag(null)} className="text-[#8888aa] hover:text-white">✕</button>
+            </div>
+            <div className="space-y-3">
+              {Object.entries(selectedDiag).map(([key, val]) => (
+                <div key={key}>
+                  <p className="text-xs text-cyan-400 uppercase tracking-wide">{key.replace(/([A-Z])/g, " $1")}</p>
+                  <p className="text-sm text-white/80">{String(val) || "Not answered"}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

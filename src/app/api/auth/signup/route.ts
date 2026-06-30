@@ -52,7 +52,7 @@ export async function POST(request: Request) {
       await prisma.studentProfile.create({
         data: {
           userId: user.id,
-          status: "PENDING",
+          status: "DRAFT",
         },
       });
     }

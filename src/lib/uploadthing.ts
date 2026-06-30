@@ -1,4 +1,5 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
+import { generateReactHelpers } from "@uploadthing/react";
 import { auth } from "./auth";
 
 const f = createUploadthing();
@@ -58,3 +59,5 @@ export const ourFileRouter = {
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
+
+export const { useUploadThing } = generateReactHelpers<OurFileRouter>();

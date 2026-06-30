@@ -10,7 +10,7 @@ export async function GET() {
   }
 
   const applications = await prisma.studentProfile.findMany({
-    include: { user: { select: { name: true, email: true } } },
+    include: { user: { select: { id: true, name: true, email: true } } },
     orderBy: { createdAt: "desc" },
   });
 

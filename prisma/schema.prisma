@@ -13,6 +13,7 @@ enum Role {
 }
 
 enum ApplicationStatus {
+  DRAFT
   PENDING
   ACCEPTED
   REJECTED
@@ -88,6 +89,7 @@ model StudentProfile {
   resume    String?
   resumeType ResumeType?
   status    ApplicationStatus @default(PENDING)
+  diagnostic Json?
   createdAt DateTime          @default(now())
 
   user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -101,6 +103,7 @@ model Announcement {
   title     String
   content   String
   imageUrl  String?
+  videoUrl  String?
   createdAt DateTime @default(now())
 
   mentor MentorProfile @relation(fields: [mentorId], references: [id], onDelete: Cascade)
