@@ -144,7 +144,7 @@ export default function StudentChatPage() {
                     <p className="font-medium truncate text-sm">{u.name}</p>
                     <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>{u.email}</p>
                   </div>
-                  <span className="badge text-[9px] badge-gold">MENTOR</span>
+                  <span className={`badge text-[9px] ${u.role === "MENTOR" ? "badge-gold" : "badge-emerald"}`}>{u.role}</span>
                 </button>
               ))}
               <div className="px-3 py-2 text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Conversations</div>
@@ -162,6 +162,9 @@ export default function StudentChatPage() {
                       <p className="font-medium truncate text-sm">{other?.name}</p>
                       <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>{conv.messages?.[0]?.content || "No messages"}</p>
                     </div>
+                    {other?.role && (
+                      <span className={`badge text-[9px] ${other.role === "MENTOR" ? "badge-gold" : "badge-emerald"}`}>{other.role}</span>
+                    )}
                   </button>
                 );
               })}

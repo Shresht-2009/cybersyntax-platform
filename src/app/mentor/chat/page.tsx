@@ -192,6 +192,9 @@ export default function MentorChatPage() {
                       <p className="font-medium truncate text-sm">{other?.name}</p>
                       <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>{conv.messages?.[0]?.content || "No messages"}</p>
                     </div>
+                    {other?.role && (
+                      <span className={`badge text-[9px] ${other.role === "MENTOR" ? "badge-gold" : "badge-emerald"}`}>{other.role}</span>
+                    )}
                   </button>
                 );
               })}
