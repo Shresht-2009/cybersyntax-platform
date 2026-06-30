@@ -135,8 +135,9 @@ export default function LoginPage() {
 
           {error && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              initial={{ opacity: 0, height: 0, x: 0 }}
+              animate={{ opacity: 1, height: 'auto', x: [0, -4, 4, -4, 4, 0] }}
+              transition={{ type: "spring", stiffness: 200, damping: 12 }}
               className="mb-5"
             >
               <div className="badge-red w-full justify-center py-2.5 px-4 rounded-lg text-sm">{error}</div>
@@ -146,11 +147,19 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <motion.div initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 }}>
               <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Email</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="input" placeholder="you@example.com" required />
+              <motion.div whileFocus={{ scale: 1.01 }} className="relative">
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="input" placeholder="you@example.com" required />
+                <motion.div className="absolute inset-0 rounded-lg pointer-events-none" style={{ boxShadow: '0 0 0 0 rgba(16,185,129,0)' }}
+                  whileFocus={{ boxShadow: '0 0 0 3px rgba(16,185,129,0.08)' }} />
+              </motion.div>
             </motion.div>
             <motion.div initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
               <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Password</label>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="input" placeholder="••••••••" required />
+              <motion.div whileFocus={{ scale: 1.01 }} className="relative">
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="input" placeholder="••••••••" required />
+                <motion.div className="absolute inset-0 rounded-lg pointer-events-none" style={{ boxShadow: '0 0 0 0 rgba(16,185,129,0)' }}
+                  whileFocus={{ boxShadow: '0 0 0 3px rgba(16,185,129,0.08)' }} />
+              </motion.div>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
               <button type="submit" disabled={loading} className="btn-primary w-full justify-center py-2.5 rounded-lg text-base relative overflow-hidden group">

@@ -4,7 +4,7 @@ import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 function SignupForm() {
   const router = useRouter();
@@ -85,54 +85,68 @@ function SignupForm() {
             </div>
           )}
 
-          {step === 1 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="space-y-4"
-            >
-              <button
-                onClick={() => selectRole("STUDENT")}
-                className="card w-full p-5 text-left hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-[var(--accent-emerald)]/10 flex items-center justify-center ring-1 ring-[var(--accent-emerald)]/20 shrink-0">
-                    <svg className="w-5 h-5 text-[var(--accent-emerald)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 7l-9-5 9-5 9 5-9 5z" />
-                    </svg>
-                  </div>
-                  <div className="text-left">
-                    <h3 className="font-semibold text-[var(--text-primary)]">Student</h3>
-                    <p className="text-sm text-[var(--text-secondary)] mt-0.5">Join courses, learn from mentors</p>
-                  </div>
-                </div>
-              </button>
-              <button
-                onClick={() => selectRole("MENTOR")}
-                className="card w-full p-5 text-left hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-[var(--accent-gold)]/10 flex items-center justify-center ring-1 ring-[var(--accent-gold)]/20 shrink-0">
-                    <svg className="w-5 h-5 text-[var(--accent-gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                  </div>
-                  <div className="text-left">
-                    <h3 className="font-semibold text-[var(--text-primary)]">Mentor</h3>
-                    <p className="text-sm text-[var(--text-secondary)] mt-0.5">Teach, guide, and earn</p>
-                  </div>
-                </div>
-              </button>
-            </motion.div>
-          )}
+          <div className="perspective-1000" style={{ minHeight: 300 }}>
+            <AnimatePresence mode="wait">
+              {step === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, rotateY: -90 }}
+                  animate={{ opacity: 1, rotateY: 0 }}
+                  exit={{ opacity: 0, rotateY: 90 }}
+                  transition={{ type: "spring", stiffness: 100, damping: 16 }}
+                  className="space-y-4 preserve-3d backface-hidden"
+                >
+                  <motion.button
+                    onClick={() => selectRole("STUDENT")}
+                    className="card w-full p-5 text-left cursor-pointer group"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="flex items-center gap-4">
+                      <motion.div className="w-11 h-11 rounded-xl bg-[var(--accent-emerald)]/10 flex items-center justify-center ring-1 ring-[var(--accent-emerald)]/20 shrink-0"
+                        whileHover={{ rotate: [0, -10, 10, 0] }} transition={{ duration: 0.4 }}>
+                        <svg className="w-5 h-5 text-[var(--accent-emerald)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 7l-9-5 9-5 9 5-9 5z" />
+                        </svg>
+                      </motion.div>
+                      <div className="text-left">
+                        <h3 className="font-semibold text-[var(--text-primary)]">Student</h3>
+                        <p className="text-sm text-[var(--text-secondary)] mt-0.5">Join courses, learn from mentors</p>
+                      </div>
+                    </div>
+                  </motion.button>
+                  <motion.button
+                    onClick={() => selectRole("MENTOR")}
+                    className="card w-full p-5 text-left cursor-pointer group"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="flex items-center gap-4">
+                      <motion.div className="w-11 h-11 rounded-xl bg-[var(--accent-gold)]/10 flex items-center justify-center ring-1 ring-[var(--accent-gold)]/20 shrink-0"
+                        whileHover={{ rotate: [0, -10, 10, 0] }} transition={{ duration: 0.4 }}>
+                        <svg className="w-5 h-5 text-[var(--accent-gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                      </motion.div>
+                      <div className="text-left">
+                        <h3 className="font-semibold text-[var(--text-primary)]">Mentor</h3>
+                        <p className="text-sm text-[var(--text-secondary)] mt-0.5">Teach, guide, and earn</p>
+                      </div>
+                    </div>
+                  </motion.button>
+                </motion.div>
+              )}
 
-          {step === 2 && (
-            <motion.form
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              onSubmit={handleSubmit}
-              className="space-y-5"
-            >
+              {step === 2 && (
+                <motion.form
+                  key="step2"
+                  initial={{ opacity: 0, rotateY: 90 }}
+                  animate={{ opacity: 1, rotateY: 0 }}
+                  exit={{ opacity: 0, rotateY: -90 }}
+                  transition={{ type: "spring", stiffness: 100, damping: 16 }}
+                  onSubmit={handleSubmit}
+                  className="space-y-5 preserve-3d backface-hidden"
+                >
               <div>
                 <label className="block text-sm text-[var(--text-secondary)] mb-1.5 font-medium">Full Name</label>
                 <input
@@ -196,6 +210,8 @@ function SignupForm() {
               </button>
             </motion.form>
           )}
+            </AnimatePresence>
+          </div>
 
           <p className="text-center mt-6 text-sm text-[var(--text-secondary)]">
             Already have an account?{" "}

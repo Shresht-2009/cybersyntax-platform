@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { IconUsers, IconClipboard, IconMegaphone, IconDollar, IconPencil, IconBookOpen } from "@/components/shared/Icons";
 
 const statCards = [
-  { label: "Active Students", key: "studentCount" as const, icon: IconUsers, href: "/mentor/students", format: (v: any) => v ?? 0 },
-  { label: "Pending Applications", key: "pendingApps" as const, icon: IconClipboard, href: "/mentor/applications", format: (v: any) => v ?? 0 },
-  { label: "Announcements", key: "announcementCount" as const, icon: IconMegaphone, href: "/mentor/announcements", format: (v: any) => v ?? 0 },
-  { label: "Balance", key: "totalFunds" as const, icon: IconDollar, href: "/mentor/finance", format: (v: any) => `$${(v ?? 0).toFixed(0)}` },
+  { label: "Active Students", key: "studentCount" as const, icon: IconUsers, href: "/mentor/students", format: (v: any) => v ?? 0, isNumber: true },
+  { label: "Pending Applications", key: "pendingApps" as const, icon: IconClipboard, href: "/mentor/applications", format: (v: any) => v ?? 0, isNumber: true },
+  { label: "Announcements", key: "announcementCount" as const, icon: IconMegaphone, href: "/mentor/announcements", format: (v: any) => v ?? 0, isNumber: true },
+  { label: "Balance", key: "totalFunds" as const, icon: IconDollar, href: "/mentor/finance", format: (v: any) => `$${(v ?? 0).toFixed(0)}`, isNumber: false },
 ];
 
 const quickActions = [
@@ -64,7 +64,17 @@ export default function MentorDashboard() {
                 <div className="flex items-center justify-between mb-3">
                   <card.icon />
                 </div>
-                <p className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{card.format(stats?.[card.key])}</p>
+                {card.isNumber ? (
+                  <CountUp value={card.format(stats?.[card.key]) as number} />
+                ) : (
+                  <motion.p
+                    className="text-2xl font-bold text-gradient"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                  >
+                    {card.format(stats?.[card.key])}
+                  </motion.p>
+                )}
                 <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{card.label}</p>
               </div>
             </Link>
@@ -83,8 +93,9 @@ export default function MentorDashboard() {
           {quickActions.map((action, i) => (
             <motion.div
               key={i}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={{ scale: 1.05, y: -4 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 200, damping: 12 }}
             >
               <Link
                 href={action.href}
@@ -101,5 +112,44 @@ export default function MentorDashboard() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+function CountUp({ value }: { value: number }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          let start = 0;
+          const duration = 1500;
+          const step = Math.ceil(value / (duration / 16));
+          const timer = setInterval(() => {
+            start += step;
+            if (start >= value) { setCount(value); clearInterval(timer); }
+            else setCount(start);
+          }, 16);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [value]);
+
+  return (
+    <motion.p
+      ref={ref}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="text-2xl font-bold text-gradient"
+    >
+      {count}
+    </motion.p>
   );
 }
