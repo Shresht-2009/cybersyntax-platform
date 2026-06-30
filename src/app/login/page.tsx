@@ -50,86 +50,87 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ background: 'var(--bg-deep)' }}>
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
-          className="absolute rounded-full blur-[120px]"
+          className="absolute rounded-full"
           style={{
-            width: 500,
-            height: 500,
-            background: 'radial-gradient(circle, rgba(0,212,255,0.08), transparent 70%)',
+            width: 600, height: 600,
+            background: 'radial-gradient(circle, rgba(0,212,255,0.06), transparent 70%)',
             left: '50%', top: '50%',
             transform: 'translate(-50%, -50%)',
+            filter: 'blur(100px)',
           }}
           animate={{
-            x: [0, (mousePos.x - 0.5) * 40, 0],
-            y: [0, (mousePos.y - 0.5) * 30, 0],
-          }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute rounded-full blur-[100px]"
-          style={{
-            width: 350, height: 350,
-            background: 'radial-gradient(circle, rgba(139,92,246,0.06), transparent 70%)',
-            left: '30%', top: '20%',
-          }}
-          animate={{
-            x: [0, -20, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute rounded-full blur-[100px]"
-          style={{
-            width: 300, height: 300,
-            background: 'radial-gradient(circle, rgba(0,212,255,0.05), transparent 70%)',
-            right: '25%', bottom: '15%',
-          }}
-          animate={{
-            x: [0, 25, 0],
-            y: [0, -20, 0],
+            x: [0, (mousePos.x - 0.5) * 60, 0],
+            y: [0, (mousePos.y - 0.5) * 40, 0],
           }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: 400, height: 400,
+            background: 'radial-gradient(circle, rgba(139,92,246,0.04), transparent 70%)',
+            left: '25%', top: '15%',
+            filter: 'blur(80px)',
+          }}
+          animate={{ x: [0, -30, 0], y: [0, 40, 0] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: 350, height: 350,
+            background: 'radial-gradient(circle, rgba(244,114,182,0.03), transparent 70%)',
+            right: '20%', bottom: '10%',
+            filter: 'blur(80px)',
+          }}
+          animate={{ x: [0, 30, 0], y: [0, -30, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         />
       </div>
 
       <div className="absolute inset-0 pointer-events-none opacity-[0.015]">
         <svg className="w-full h-full" viewBox="0 0 1000 800" preserveAspectRatio="none">
           <defs>
-            <pattern id="grid2" width="60" height="60" patternUnits="userSpaceOnUse">
+            <pattern id="grid4" width="60" height="60" patternUnits="userSpaceOnUse">
               <path d="M 60 0 L 0 0 0 60" fill="none" stroke="var(--accent-cyan)" strokeWidth="0.5" />
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="url(#grid2)" />
+          <rect width="100%" height="100%" fill="url(#grid4)" />
         </svg>
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 24, scale: 0.97 }}
+        initial={{ opacity: 0, y: 30, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ type: "spring", stiffness: 60, damping: 14 }}
+        transition={{ type: "spring", stiffness: 50, damping: 14 }}
         className="relative z-10 w-full max-w-md mx-4"
       >
-        <div className="card-glass p-8" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.5)' }}>
+        <div className="glass p-8 rounded-2xl glow-border" style={{ boxShadow: 'var(--shadow-lg)' }}>
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, type: "spring", stiffness: 60, damping: 14 }}
+            transition={{ delay: 0.12, type: "spring", stiffness: 50, damping: 14 }}
             className="text-center mb-8"
           >
             <motion.div
-              className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4"
-              style={{ background: 'rgba(0,212,255,0.06)', border: '1px solid rgba(0,212,255,0.1)' }}
-              whileHover={{ scale: 1.05, rotate: [0, -5, 5, 0] }}
+              className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4"
+              style={{ background: 'rgba(0,212,255,0.04)', border: '1px solid rgba(0,212,255,0.08)' }}
+              whileHover={{ scale: 1.08, rotate: [0, -6, 6, 0] }}
               transition={{ duration: 0.3 }}
             >
-              <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-                <rect x="2" y="2" width="28" height="28" rx="6" stroke="var(--accent-cyan)" strokeWidth="2" />
-                <path d="M16 8L16 24M8 16L24 16" stroke="var(--accent-cyan)" strokeWidth="2" strokeLinecap="round" />
-                <circle cx="16" cy="16" r="4" fill="var(--accent-cyan)" />
+              <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+                <rect x="2" y="2" width="28" height="28" rx="6" stroke="url(#g2)" strokeWidth="2" />
+                <path d="M16 8L16 24M8 16L24 16" stroke="url(#g2)" strokeWidth="2" strokeLinecap="round" />
+                <circle cx="16" cy="16" r="4" fill="url(#g2)" />
+                <defs>
+                  <linearGradient id="g2" x1="4" y1="4" x2="28" y2="28">
+                    <stop stopColor="#00d4ff" /><stop offset="1" stopColor="#f472b6" />
+                  </linearGradient>
+                </defs>
               </svg>
             </motion.div>
-            <h1 className="text-3xl font-bold text-gradient mb-2">Welcome Back</h1>
-            <p style={{ color: 'var(--text-secondary)' }} className="text-sm">Sign in to your CyberSyntax account</p>
+            <h1 className="text-3xl font-bold mb-2" style={{ background: 'linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Welcome Back</h1>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Sign in to your CyberSyntax account</p>
           </motion.div>
 
           {error && (
@@ -143,54 +144,27 @@ export default function LoginPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            <motion.div
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <label className="block text-sm" style={{ color: 'var(--text-secondary)' }}>Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="input mt-1.5"
-                placeholder="you@example.com"
-                required
-              />
+            <motion.div initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 }}>
+              <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Email</label>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="input" placeholder="you@example.com" required />
             </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.25 }}
-            >
-              <label className="block text-sm" style={{ color: 'var(--text-secondary)' }}>Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="input mt-1.5"
-                placeholder="••••••••"
-                required
-              />
+            <motion.div initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
+              <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Password</label>
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="input" placeholder="••••••••" required />
             </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn-primary w-full justify-center py-2.5 rounded-lg text-base"
-              >
-                {loading ? (
-                  <span className="flex items-center gap-2">
-                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="31.4 31.4" strokeLinecap="round" />
-                    </svg>
-                    Signing in...
-                  </span>
-                ) : "Sign In"}
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
+              <button type="submit" disabled={loading} className="btn-primary w-full justify-center py-2.5 rounded-lg text-base relative overflow-hidden group">
+                <span className="relative z-10">
+                  {loading ? (
+                    <span className="flex items-center gap-2 justify-center">
+                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="31.4 31.4" strokeLinecap="round" />
+                      </svg>
+                      Signing in...
+                    </span>
+                  ) : "Sign In"}
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               </button>
             </motion.div>
           </form>
@@ -198,7 +172,7 @@ export default function LoginPage() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.35 }}
+            transition={{ delay: 0.3 }}
             className="text-center mt-6 text-sm"
             style={{ color: 'var(--text-secondary)' }}
           >

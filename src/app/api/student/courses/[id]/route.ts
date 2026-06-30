@@ -9,6 +9,15 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
   const { id } = await params;
 
+  const student = await prisma.studentProfile.findUnique({ where: { userId: user.id } });
+  if (!student) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  await prisma.courseEnrollment.upsert({
+    where: { studentId_courseId: { studentId: student.id, courseId: id } },
+    update: {},
+    create: { studentId: student.id, courseId: id },
+  });
+
   const course = await prisma.course.findUnique({
     where: { id, status: "PUBLISHED" },
     include: {
