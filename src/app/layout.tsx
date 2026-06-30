@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk } from "next/font/google";
+import { Space_Grotesk, Syncopate } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/shared/Providers";
 import { Cursor } from "@/components/shared/Cursor";
@@ -8,6 +8,13 @@ import { ParticleBackground } from "@/components/shared/ParticleBackground";
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-space",
+  display: "swap",
+});
+
+const syncopate = Syncopate({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-syncopate",
   display: "swap",
 });
 
@@ -21,7 +28,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={spaceGrotesk.variable}>
+    <html lang="en" className={`${spaceGrotesk.variable} ${syncopate.variable}`}>
       <body className="antialiased min-h-screen" style={{ fontFamily: 'var(--font-space), "Space Grotesk", system-ui, sans-serif' }}>
         <Cursor />
         <ParticleBackground />
